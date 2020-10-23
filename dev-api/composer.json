@@ -1,0 +1,42 @@
+{
+  "authors": [
+    {
+      "email": "mzyhaohaoren@qq.com",
+      "name": "hunzsig"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "App\\": "App/"
+    }
+  },
+  "description": "A php project: yonna",
+  "homepage": "https://www.hunzsig.org",
+  "keywords": [
+    "yonna",
+    "php",
+    "framework",
+    "demo"
+  ],
+  "license": "MIT",
+  "name": "shanshan/fiane",
+  "require": {
+    "ext-curl": "*",
+    "ext-gd": "*",
+    "ext-json": "*",
+    "ext-mongodb": "*",
+    "ext-openssl": "*",
+    "ext-pdo": "*",
+    "ext-redis": "*",
+    "ext-simplexml": "*",
+    "ext-xmlrpc": "*",
+    "php": "~7.4",
+    "yonna/yonna": "@dev"
+  },
+  "scripts": {
+    "post-install-cmd": [
+      "@php -r \"file_exists('public/index.php') || copy('public/index.example.php', 'public/index.php');\""
+    ]
+  },
+  "type": "project"
+}

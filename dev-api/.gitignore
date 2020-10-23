@@ -1,0 +1,12 @@
+.idea/
+log/
+y_log/
+vendor/
+composer.lock
+public/index.php
+.env*
+!.env.example
+dist/
+quickInstall
+uploads
+Uploads
