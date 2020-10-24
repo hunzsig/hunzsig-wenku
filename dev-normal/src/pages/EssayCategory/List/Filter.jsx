@@ -23,8 +23,8 @@ class Filter extends Component {
   onClear = () => {
     this.form.current.setFieldsValue({
       id: undefined,
-      title: undefined,
-      category_id: undefined,
+      name: undefined,
+      level: undefined,
       status: undefined,
     });
   };
@@ -49,33 +49,17 @@ class Filter extends Component {
         <Form.Item name="id" label="ID">
           <Input allowClear={true}/>
         </Form.Item>
-        <Form.Item name="title" label={I18n('title')}>
+        <Form.Item name="name" label={I18n('name')}>
           <Input allowClear={true}/>
         </Form.Item>
-        <Form.Item name="category_id" label={I18n('CATEGORY')}>
-          <Select
-            showSearch
-            allowClear
-            placeholder={I18n('PLEASE_CHOOSE')}
-            optionFilterProp="children"
-            options={this.props.prepare.categoryMapping}
-            filterOption={(input, option) =>
-              option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-            }
-          />
+        <Form.Item name="level" label={I18n('level')}>
+          <Input allowClear={true}/>
         </Form.Item>
         <Form.Item name="status" label={I18n('status')}>
           <Select
             allowClear
             placeholder={I18n('PLEASE_CHOOSE')}
-            options={History.state.mapping.yonna.antd.Essay_EssayStatus}
-          />
-        </Form.Item>
-        <Form.Item name="is_excellent" label={I18n('excellent')}>
-          <Select
-            allowClear
-            placeholder={I18n('PLEASE_CHOOSE')}
-            options={History.state.mapping.yonna.antd.Common_Boolean}
+            options={History.state.mapping.yonna.antd.Essay_EssayCategoryStatus}
           />
         </Form.Item>
         <Form.Item style={{textAlign: 'right'}}>

@@ -15,7 +15,6 @@ class Add extends Component {
       views: 0,
       sort: 0,
       status: 1,
-      is_excellent: -1,
     };
     this.state = {
       processing: true,
@@ -95,12 +94,6 @@ class Add extends Component {
           <Select
             placeholder={I18n('PLEASE_CHOOSE')}
             options={History.state.mapping.yonna.antd.Essay_EssayStatus}
-          />
-        </Form.Item>
-        <Form.Item name="is_excellent" label={I18n('excellent')}>
-          <Select
-            placeholder={I18n('PLEASE_CHOOSE')}
-            options={History.state.mapping.yonna.antd.Common_Boolean}
           />
         </Form.Item>
         <Form.Item name="title" label={I18n('title')} rules={[{required: true}]}>

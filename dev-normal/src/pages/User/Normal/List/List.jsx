@@ -1,14 +1,14 @@
 import React, {Component} from 'react';
-import {Button, message, Pagination, Popover, Table} from 'antd';
+import {message, Button, Pagination, Table, Popover, Tag} from "antd";
 import {
-  ReloadOutlined,
   SearchOutlined,
   InsertRowAboveOutlined,
-  PlusOutlined,
-  DeleteOutlined,
-  IssuesCloseOutlined
-} from '@ant-design/icons';
-import {Api, Confirm, History, I18n, Parse, Approve} from "h-react-antd";
+  AppstoreAddOutlined,
+  ReloadOutlined,
+  IssuesCloseOutlined,
+  EditOutlined,
+} from "@ant-design/icons";
+import {Api, Confirm, History, I18n, Approve, Moment, XossShow} from "h-react-antd";
 import Filter from "./Filter";
 import Field from "./Field";
 
@@ -16,13 +16,13 @@ class List extends Component {
   constructor(props) {
     super(props);
 
-    this.tableName = "essay_";
+    this.tableName = "user_";
     this.filter = {
       current: 1,
       per: 20,
+      license_id: 3,
     };
     this.state = {
-      prepare: null,
       fields: null,
       dataSource: [],
       pagination: null,
@@ -32,21 +32,6 @@ class List extends Component {
   }
 
   componentDidMount() {
-    Api.query().post({ESSAY_CATEGORY_LIST: {status: 2}}, (res) => {
-      Api.handle(res,
-        () => {
-          const categoryMapping = [];
-          res.data.forEach((val) => {
-            categoryMapping.push({value: val.essay_category_id, label: val.essay_category_name});
-          });
-          this.setState({
-            prepare: {
-              categoryMapping: categoryMapping
-            },
-          });
-        }
-      );
-    });
     this.query();
   }
 
@@ -59,44 +44,91 @@ class List extends Component {
         width: 100,
       },
       {
-        title: I18n("category"),
-        dataIndex: this.tableName + 'category_id',
-        key: this.tableName + 'category_id',
-        render: (text) => {
-          return this.state.prepare
-            ? Parse.mapLabel(this.state.prepare.categoryMapping, text, 'ESSAY_CATEGORY')
-            : '...';
+        title: I18n(["avatar"]),
+        dataIndex: this.tableName + 'meta_avatar',
+        key: this.tableName + 'meta_avatar',
+        render: (text) => <XossShow width={50} height={50} src={text[0]}/>,
+      },
+      {
+        title: I18n(["account"]),
+        key: this.tableName + 'user_account_string',
+        render: (text, record, index) => {
+          const accounts = record[this.tableName + 'account'];
+          let color = {
+            name: '#54a9e7',
+            phone: '#f55353',
+            email: '#f55f0f',
+            wx_open_id: '#42ab42',
+            wx_union_id: '#87d068',
+          };
+          return (
+            <div>
+              {
+                accounts.map((val, idx) => {
+                  const canEdit = ['name', 'email', 'phone'].includes(val.user_account_type);
+                  return (<div key={idx}>
+                    <Tag color={color[val.user_account_type]}>
+                      {History.state.mapping.yonna.value2label.User_AccountType[val.user_account_type]}
+                    </Tag>
+                    <span>{val.user_account_string}</span>
+                    {
+                      canEdit &&
+                      <Button type="link" onClick={() => {
+                        History.push('/user/account?id=' + val.user_account_id);
+                      }}><EditOutlined/></Button>
+                    }
+                  </div>);
+                })
+              }
+            </div>
+          );
         },
       },
       {
-        title: I18n("title"),
-        dataIndex: this.tableName + 'title',
-        key: this.tableName + 'title',
+        title: I18n("name"),
+        dataIndex: this.tableName + 'meta_name',
+        key: this.tableName + 'meta_name',
       },
       {
-        title: I18n("likes"),
-        dataIndex: this.tableName + 'likes',
-        key: this.tableName + 'likes',
+        title: I18n("nickname"),
+        dataIndex: this.tableName + 'meta_nickname',
+        key: this.tableName + 'meta_nickname',
       },
       {
-        title: I18n("views"),
-        dataIndex: this.tableName + 'views',
-        key: this.tableName + 'views',
+        title: I18n("sex"),
+        dataIndex: this.tableName + 'meta_sex',
+        key: this.tableName + 'meta_sex',
+        render: (text) => {
+          return History.state.mapping.yonna.value2label.User_Sex[text];
+        },
+      },
+      {
+        title: I18n("age"),
+        dataIndex: this.tableName + 'meta_age',
+        key: this.tableName + 'meta_age',
+      },
+      {
+        title: I18n(["birth", "date"]),
+        dataIndex: this.tableName + 'meta_birth_date',
+        key: this.tableName + 'meta_birth_date',
+        render: (text) => {
+          return Moment.format(text, 'YYYY-MM-DD');
+        },
       },
       {
         title: I18n("status"),
         dataIndex: this.tableName + 'status',
         key: this.tableName + 'status',
         render: (text) => {
-          return History.state.mapping.yonna.value2label.Essay_EssayStatus[text];
+          return History.state.mapping.yonna.value2label.User_UserStatus[text];
         },
       },
       {
-        title: I18n("excellent"),
-        dataIndex: this.tableName + 'is_excellent',
-        key: this.tableName + 'is_excellent',
+        title: I18n(["register", "time"]),
+        dataIndex: this.tableName + 'register_time',
+        key: this.tableName + 'register_time',
         render: (text) => {
-          return History.state.mapping.yonna.value2label.Common_Boolean[text];
+          return Moment.format(text);
         },
       },
       {
@@ -108,10 +140,10 @@ class List extends Component {
           return (
             <div>
               <Button size="small" onClick={() => {
-                History.push('/essay/edit?id=' + record.essay_id);
+                History.push('/user/normal/edit?id=' + record[this.tableName + 'id']);
               }}>{I18n('EDIT')}</Button>
               <Confirm onConfirm={() => {
-                Api.query().post({ESSAY_DEL: {id: record.essay_id}}, (response) => {
+                Api.query().post({USER_DEL: {id: record[this.tableName + 'id']}}, (response) => {
                   Api.handle(response,
                     () => {
                       message.success(I18n(['DELETE', 'SUCCESS']));
@@ -126,7 +158,7 @@ class List extends Component {
           );
         }
       },
-    ]
+    ];
     if (Array.isArray(fields)) {
       const some = [];
       all.forEach((val) => {
@@ -151,32 +183,26 @@ class List extends Component {
             this.query();
           }}
         >{I18n(['REFRESH'])}</Button>
-        {
-          this.state.prepare &&
-          <Popover
-            trigger="click"
-            placement="bottomLeft"
-            title={I18n(['CONDITION', 'SEARCH'])}
-            content={
-              <Filter
-                prepare={this.state.prepare}
-                onFilter={(filter) => {
-                  this.filter = {...this.filter, ...filter};
-                  this.filter.current = 1;
-                  this.query();
-                }}
-              />
-            }
-          >
-            <Button size="small" type="primary" icon={<SearchOutlined/>}>
-              {I18n(['CONDITION', 'SEARCH'])}
-            </Button>
-          </Popover>
-        }
         <Popover
           trigger="click"
           placement="bottomLeft"
-          title={I18n(['FIELD', 'SEARCH'])}
+          title={I18n(['CONDITION', 'SEARCH'])}
+          content={
+            <Filter onFilter={(filter) => {
+              this.filter = {...this.filter, ...filter};
+              this.filter.current = 1;
+              this.query();
+            }}/>
+          }
+        >
+          <Button size="small" type="primary" icon={<SearchOutlined/>}>
+            {I18n(['CONDITION', 'SEARCH'])}
+          </Button>
+        </Popover>
+        <Popover
+          trigger="click"
+          placement="bottomLeft"
+          title={I18n(['CONDITION', 'SEARCH'])}
           content={
             <Field
               columns={this.columns()}
@@ -192,42 +218,21 @@ class List extends Component {
         <Button
           size="small"
           danger
-          icon={<PlusOutlined/>}
+          icon={<AppstoreAddOutlined/>}
           onClick={() => {
-            History.push('/essay/add');
+            History.push('/user/normal/add');
           }}
-        >{I18n(['CREATE', 'ARTICLE'])}</Button>
-        <Confirm
-          disabled={this.state.querying || this.state.batchKeys.length <= 0}
-          onConfirm={() => {
-            this.setState({querying: true});
-            Api.query().post({ESSAY_MDEL: {ids: this.state.batchKeys}}, (response) => {
-              this.setState({querying: false});
-              Api.handle(response,
-                () => {
-                  message.success(I18n(['BATCH', 'DELETE', 'SUCCESS']));
-                  this.query();
-                }
-              );
-            });
-          }}>
-          <Button
-            size="small"
-            danger
-            icon={<DeleteOutlined/>}
-            disabled={this.state.querying || this.state.batchKeys.length <= 0}
-          >{I18n(['BATCH', 'DELETE'])}</Button>
-        </Confirm>
+        >{I18n(['CREATE', 'NORMAL', 'USER'])}</Button>
         <Popover
           trigger="click"
           placement="bottomLeft"
           title={I18n(['choose', 'status'])}
           content={
             <Approve
-              mapping={History.state.mapping.yonna.antd.Essay_EssayStatus}
+              mapping={History.state.mapping.yonna.antd.User_UserStatus}
               onApprove={(status) => {
                 this.setState({querying: true});
-                Api.query().post({ESSAY_MSTATUS: {ids: this.state.batchKeys, status: status}}, (response) => {
+                Api.query().post({USER_MSTATUS: {ids: this.state.batchKeys, status: status}}, (response) => {
                   this.setState({querying: false});
                   Api.handle(response,
                     () => {
@@ -255,15 +260,15 @@ class List extends Component {
     this.setState({
       querying: true,
     });
-    Api.query().post({ESSAY_PAGE: this.filter}, (res) => {
+    Api.query().post({USER_PAGE: this.filter}, (response) => {
       this.setState({
         querying: false,
       });
-      Api.handle(res,
+      Api.handle(response,
         () => {
           this.setState({
-            dataSource: res.data.list || [],
-            pagination: res.data.page
+            dataSource: response.data.list || [],
+            pagination: response.data.page
           });
         }
       );

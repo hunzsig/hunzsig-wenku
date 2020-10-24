@@ -92,14 +92,6 @@ class List extends Component {
         },
       },
       {
-        title: I18n("excellent"),
-        dataIndex: this.tableName + 'is_excellent',
-        key: this.tableName + 'is_excellent',
-        render: (text) => {
-          return History.state.mapping.yonna.value2label.Common_Boolean[text];
-        },
-      },
-      {
         title: I18n('operate'),
         dataIndex: this.tableName + 'id',
         key: this.tableName + 'id',

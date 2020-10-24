@@ -1,6 +1,9 @@
 import React, {Component} from 'react';
-import {Form, Input, Button, Select} from 'antd';
+import {Form, Input, Button, Select, DatePicker} from 'antd';
 import {History, I18n, Parse} from 'h-react-antd';
+import * as moment from "moment";
+
+const {RangePicker} = DatePicker;
 
 class Filter extends Component {
   constructor(props) {
@@ -16,22 +19,23 @@ class Filter extends Component {
       if (!values[i]) {
         values[i] = undefined;
       }
+      if (i === 'register_time' && typeof time === 'object') {
+        const time = values[i];
+        values[i] = [time[0].unix().valueOf(), time[1].unix().valueOf()];
+      }
     }
+    console.log(values);
     this.props.onFilter(values);
   };
 
   onClear = () => {
     this.form.current.setFieldsValue({
       id: undefined,
-      title: undefined,
-      category_id: undefined,
       status: undefined,
+      register_time: undefined,
+      account: undefined,
     });
   };
-
-  // onReset = () => {
-  //   this.form.current.resetFields();
-  // };
 
   render() {
     const layout = {
@@ -49,33 +53,25 @@ class Filter extends Component {
         <Form.Item name="id" label="ID">
           <Input allowClear={true}/>
         </Form.Item>
-        <Form.Item name="title" label={I18n('title')}>
-          <Input allowClear={true}/>
-        </Form.Item>
-        <Form.Item name="category_id" label={I18n('CATEGORY')}>
-          <Select
-            showSearch
-            allowClear
-            placeholder={I18n('PLEASE_CHOOSE')}
-            optionFilterProp="children"
-            options={this.props.prepare.categoryMapping}
-            filterOption={(input, option) =>
-              option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-            }
-          />
-        </Form.Item>
         <Form.Item name="status" label={I18n('status')}>
           <Select
             allowClear
             placeholder={I18n('PLEASE_CHOOSE')}
-            options={History.state.mapping.yonna.antd.Essay_EssayStatus}
+            options={History.state.mapping.yonna.antd.User_UserStatus}
           />
         </Form.Item>
-        <Form.Item name="is_excellent" label={I18n('excellent')}>
-          <Select
-            allowClear
-            placeholder={I18n('PLEASE_CHOOSE')}
-            options={History.state.mapping.yonna.antd.Common_Boolean}
+        <Form.Item name="account" label={I18n('account')}>
+          <Input allowClear={true}/>
+        </Form.Item>
+        <Form.Item name="register_time" label={I18n(["register", "time"])}>
+          <RangePicker
+            locale={History.i18nAntd()}
+            showTime={{format: 'HH:mm'}}
+            format="YYYY-MM-DD HH:mm:00"
+            ranges={{
+              [I18n('Today')]: [moment(), moment()],
+              [I18n(['This', 'Month'])]: [moment().startOf('month'), moment().endOf('month')],
+            }}
           />
         </Form.Item>
         <Form.Item style={{textAlign: 'right'}}>

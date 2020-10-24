@@ -1,14 +1,14 @@
 import React, {Component} from 'react';
-import {Button, message, Pagination, Popover, Table} from 'antd';
+import {message, Button, Pagination, Table, Popover} from "antd";
 import {
-  ReloadOutlined,
   SearchOutlined,
   InsertRowAboveOutlined,
-  PlusOutlined,
+  AppstoreAddOutlined,
+  ReloadOutlined,
   DeleteOutlined,
   IssuesCloseOutlined
-} from '@ant-design/icons';
-import {Api, Confirm, History, I18n, Parse, Approve} from "h-react-antd";
+} from "@ant-design/icons";
+import {Api, Confirm, History, I18n, Approve} from "h-react-antd";
 import Filter from "./Filter";
 import Field from "./Field";
 
@@ -16,13 +16,12 @@ class List extends Component {
   constructor(props) {
     super(props);
 
-    this.tableName = "essay_";
+    this.tableName = "essay_category_";
     this.filter = {
       current: 1,
       per: 20,
     };
     this.state = {
-      prepare: null,
       fields: null,
       dataSource: [],
       pagination: null,
@@ -32,21 +31,6 @@ class List extends Component {
   }
 
   componentDidMount() {
-    Api.query().post({ESSAY_CATEGORY_LIST: {status: 2}}, (res) => {
-      Api.handle(res,
-        () => {
-          const categoryMapping = [];
-          res.data.forEach((val) => {
-            categoryMapping.push({value: val.essay_category_id, label: val.essay_category_name});
-          });
-          this.setState({
-            prepare: {
-              categoryMapping: categoryMapping
-            },
-          });
-        }
-      );
-    });
     this.query();
   }
 
@@ -59,44 +43,16 @@ class List extends Component {
         width: 100,
       },
       {
-        title: I18n("category"),
-        dataIndex: this.tableName + 'category_id',
-        key: this.tableName + 'category_id',
-        render: (text) => {
-          return this.state.prepare
-            ? Parse.mapLabel(this.state.prepare.categoryMapping, text, 'ESSAY_CATEGORY')
-            : '...';
-        },
-      },
-      {
-        title: I18n("title"),
-        dataIndex: this.tableName + 'title',
-        key: this.tableName + 'title',
-      },
-      {
-        title: I18n("likes"),
-        dataIndex: this.tableName + 'likes',
-        key: this.tableName + 'likes',
-      },
-      {
-        title: I18n("views"),
-        dataIndex: this.tableName + 'views',
-        key: this.tableName + 'views',
+        title: I18n("name"),
+        dataIndex: this.tableName + 'name',
+        key: this.tableName + 'name',
       },
       {
         title: I18n("status"),
         dataIndex: this.tableName + 'status',
         key: this.tableName + 'status',
         render: (text) => {
-          return History.state.mapping.yonna.value2label.Essay_EssayStatus[text];
-        },
-      },
-      {
-        title: I18n("excellent"),
-        dataIndex: this.tableName + 'is_excellent',
-        key: this.tableName + 'is_excellent',
-        render: (text) => {
-          return History.state.mapping.yonna.value2label.Common_Boolean[text];
+          return History.state.mapping.yonna.value2label.Essay_EssayCategoryStatus[text];
         },
       },
       {
@@ -108,10 +64,10 @@ class List extends Component {
           return (
             <div>
               <Button size="small" onClick={() => {
-                History.push('/essay/edit?id=' + record.essay_id);
+                History.push('/essay/category/edit?id=' + record[this.tableName + 'id']);
               }}>{I18n('EDIT')}</Button>
               <Confirm onConfirm={() => {
-                Api.query().post({ESSAY_DEL: {id: record.essay_id}}, (response) => {
+                Api.query().post({ESSAY_CATEGORY_DEL: {id: record[this.tableName + 'id']}}, (response) => {
                   Api.handle(response,
                     () => {
                       message.success(I18n(['DELETE', 'SUCCESS']));
@@ -126,7 +82,7 @@ class List extends Component {
           );
         }
       },
-    ]
+    ];
     if (Array.isArray(fields)) {
       const some = [];
       all.forEach((val) => {
@@ -151,28 +107,22 @@ class List extends Component {
             this.query();
           }}
         >{I18n(['REFRESH'])}</Button>
-        {
-          this.state.prepare &&
-          <Popover
-            trigger="click"
-            placement="bottomLeft"
-            title={I18n(['CONDITION', 'SEARCH'])}
-            content={
-              <Filter
-                prepare={this.state.prepare}
-                onFilter={(filter) => {
-                  this.filter = {...this.filter, ...filter};
-                  this.filter.current = 1;
-                  this.query();
-                }}
-              />
-            }
-          >
-            <Button size="small" type="primary" icon={<SearchOutlined/>}>
-              {I18n(['CONDITION', 'SEARCH'])}
-            </Button>
-          </Popover>
-        }
+        <Popover
+          trigger="click"
+          placement="bottomLeft"
+          title={I18n(['CONDITION', 'SEARCH'])}
+          content={
+            <Filter onFilter={(filter) => {
+              this.filter = {...this.filter, ...filter};
+              this.filter.current = 1;
+              this.query();
+            }}/>
+          }
+        >
+          <Button size="small" type="primary" icon={<SearchOutlined/>}>
+            {I18n(['CONDITION', 'SEARCH'])}
+          </Button>
+        </Popover>
         <Popover
           trigger="click"
           placement="bottomLeft"
@@ -192,16 +142,16 @@ class List extends Component {
         <Button
           size="small"
           danger
-          icon={<PlusOutlined/>}
+          icon={<AppstoreAddOutlined/>}
           onClick={() => {
-            History.push('/essay/add');
+            History.push('/essay/category/add');
           }}
-        >{I18n(['CREATE', 'ARTICLE'])}</Button>
+        >{I18n(['CREATE', 'CATEGORY'])}</Button>
         <Confirm
           disabled={this.state.querying || this.state.batchKeys.length <= 0}
           onConfirm={() => {
             this.setState({querying: true});
-            Api.query().post({ESSAY_MDEL: {ids: this.state.batchKeys}}, (response) => {
+            Api.query().post({ESSAY_CATEGORY_MDEL: {ids: this.state.batchKeys}}, (response) => {
               this.setState({querying: false});
               Api.handle(response,
                 () => {
@@ -224,10 +174,10 @@ class List extends Component {
           title={I18n(['choose', 'status'])}
           content={
             <Approve
-              mapping={History.state.mapping.yonna.antd.Essay_EssayStatus}
+              mapping={History.state.mapping.yonna.antd.Essay_EssayCategoryStatus}
               onApprove={(status) => {
                 this.setState({querying: true});
-                Api.query().post({ESSAY_MSTATUS: {ids: this.state.batchKeys, status: status}}, (response) => {
+                Api.query().post({ESSAY_CATEGORY_MSTATUS: {ids: this.state.batchKeys, status: status}}, (response) => {
                   this.setState({querying: false});
                   Api.handle(response,
                     () => {
@@ -255,15 +205,15 @@ class List extends Component {
     this.setState({
       querying: true,
     });
-    Api.query().post({ESSAY_PAGE: this.filter}, (res) => {
+    Api.query().post({ESSAY_CATEGORY_PAGE: this.filter}, (response) => {
       this.setState({
         querying: false,
       });
-      Api.handle(res,
+      Api.handle(response,
         () => {
           this.setState({
-            dataSource: res.data.list || [],
-            pagination: res.data.page
+            dataSource: response.data.list || [],
+            pagination: response.data.page
           });
         }
       );

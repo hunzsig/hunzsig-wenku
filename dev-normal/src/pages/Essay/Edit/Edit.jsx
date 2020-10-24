@@ -99,12 +99,6 @@ class Edit extends Component {
               options={History.state.mapping.yonna.antd.Essay_EssayStatus}
             />
           </Form.Item>
-          <Form.Item name="is_excellent" label={I18n('excellent')}>
-            <Select
-              placeholder={I18n('PLEASE_CHOOSE')}
-              options={History.state.mapping.yonna.antd.Common_Boolean}
-            />
-          </Form.Item>
           <Form.Item name="title" label={I18n('title')} rules={[{required: true}]}>
             <Input allowClear={true}/>
           </Form.Item>

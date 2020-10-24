@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
-import {Form, Input, Button, Select} from 'antd';
+import {Form, Input, Button, DatePicker} from 'antd';
 import {History, I18n, Parse} from 'h-react-antd';
+import * as moment from "moment";
 
 class Filter extends Component {
   constructor(props) {
@@ -16,6 +17,9 @@ class Filter extends Component {
       if (!values[i]) {
         values[i] = undefined;
       }
+      if (i === 'feedback_time' || i === 'answer_time') {
+        values[i] = [values[i][0].unix().valueOf(), values[i][1].unix().valueOf()]
+      }
     }
     this.props.onFilter(values);
   };
@@ -23,15 +27,9 @@ class Filter extends Component {
   onClear = () => {
     this.form.current.setFieldsValue({
       id: undefined,
-      title: undefined,
-      category_id: undefined,
-      status: undefined,
+      content: undefined,
     });
   };
-
-  // onReset = () => {
-  //   this.form.current.resetFields();
-  // };
 
   render() {
     const layout = {
@@ -49,33 +47,29 @@ class Filter extends Component {
         <Form.Item name="id" label="ID">
           <Input allowClear={true}/>
         </Form.Item>
-        <Form.Item name="title" label={I18n('title')}>
+        <Form.Item name="content" label={I18n('content')}>
           <Input allowClear={true}/>
         </Form.Item>
-        <Form.Item name="category_id" label={I18n('CATEGORY')}>
-          <Select
-            showSearch
-            allowClear
-            placeholder={I18n('PLEASE_CHOOSE')}
-            optionFilterProp="children"
-            options={this.props.prepare.categoryMapping}
-            filterOption={(input, option) =>
-              option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-            }
+        <Form.Item name="feedback_time" label={I18n(["feedback", "time"])}>
+          <DatePicker.RangePicker
+            locale={History.i18nAntd()}
+            showTime={{format: 'HH:mm'}}
+            format="YYYY-MM-DD HH:mm:00"
+            ranges={{
+              [I18n('Today')]: [moment(), moment()],
+              [I18n(['This', 'Month'])]: [moment().startOf('month'), moment().endOf('month')],
+            }}
           />
         </Form.Item>
-        <Form.Item name="status" label={I18n('status')}>
-          <Select
-            allowClear
-            placeholder={I18n('PLEASE_CHOOSE')}
-            options={History.state.mapping.yonna.antd.Essay_EssayStatus}
-          />
-        </Form.Item>
-        <Form.Item name="is_excellent" label={I18n('excellent')}>
-          <Select
-            allowClear
-            placeholder={I18n('PLEASE_CHOOSE')}
-            options={History.state.mapping.yonna.antd.Common_Boolean}
+        <Form.Item name="answer_time" label={I18n(["answer", "time"])}>
+          <DatePicker.RangePicker
+            locale={History.i18nAntd()}
+            showTime={{format: 'HH:mm'}}
+            format="YYYY-MM-DD HH:mm:00"
+            ranges={{
+              [I18n('Today')]: [moment(), moment()],
+              [I18n(['This', 'Month'])]: [moment().startOf('month'), moment().endOf('month')],
+            }}
           />
         </Form.Item>
         <Form.Item style={{textAlign: 'right'}}>

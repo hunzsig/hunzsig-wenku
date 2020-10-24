@@ -71,13 +71,6 @@ class Filter extends Component {
             options={History.state.mapping.yonna.antd.Essay_EssayStatus}
           />
         </Form.Item>
-        <Form.Item name="is_excellent" label={I18n('excellent')}>
-          <Select
-            allowClear
-            placeholder={I18n('PLEASE_CHOOSE')}
-            options={History.state.mapping.yonna.antd.Common_Boolean}
-          />
-        </Form.Item>
         <Form.Item style={{textAlign: 'right'}}>
           <Button onClick={this.onClear}>{I18n('CLEAR')}</Button>
           <Button type="primary" htmlType="submit">{I18n('SEARCH')}</Button>
