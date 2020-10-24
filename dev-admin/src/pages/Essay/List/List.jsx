@@ -6,7 +6,10 @@ import {
   InsertRowAboveOutlined,
   PlusOutlined,
   DeleteOutlined,
-  IssuesCloseOutlined
+  IssuesCloseOutlined,
+  VerticalAlignTopOutlined,
+  LikeOutlined,
+  DislikeOutlined,
 } from '@ant-design/icons';
 import {Api, Confirm, History, I18n, Parse, Approve} from "h-react-antd";
 import Filter from "./Filter";
@@ -74,16 +77,6 @@ class List extends Component {
         key: this.tableName + 'title',
       },
       {
-        title: I18n("likes"),
-        dataIndex: this.tableName + 'likes',
-        key: this.tableName + 'likes',
-      },
-      {
-        title: I18n("views"),
-        dataIndex: this.tableName + 'views',
-        key: this.tableName + 'views',
-      },
-      {
         title: I18n("status"),
         dataIndex: this.tableName + 'status',
         key: this.tableName + 'status',
@@ -100,6 +93,21 @@ class List extends Component {
         },
       },
       {
+        title: I18n("likes"),
+        dataIndex: this.tableName + 'likes',
+        key: this.tableName + 'likes',
+      },
+      {
+        title: I18n("views"),
+        dataIndex: this.tableName + 'views',
+        key: this.tableName + 'views',
+      },
+      {
+        title: I18n("sort"),
+        dataIndex: this.tableName + 'sort',
+        key: this.tableName + 'sort',
+      },
+      {
         title: I18n('operate'),
         dataIndex: this.tableName + 'id',
         key: this.tableName + 'id',
@@ -107,6 +115,42 @@ class List extends Component {
         render: (text, record, index) => {
           return (
             <div>
+              <Confirm onConfirm={() => {
+                Api.query().post({ESSAY_TOP: {id: record.essay_id}}, (response) => {
+                  Api.handle(response,
+                    () => {
+                      message.success(I18n(['SETTING', 'SUCCESS']));
+                      this.query();
+                    }
+                  );
+                });
+              }}>
+                <Button type="primary" size="small" icon={<VerticalAlignTopOutlined/>}>{I18n('TOP')}</Button>
+              </Confirm>
+              <Confirm onConfirm={() => {
+                Api.query().post({
+                  ESSAY_EXCELLENT: {
+                    id: record.essay_id,
+                    is_excellent: -1 * record.essay_is_excellent
+                  }
+                }, (response) => {
+                  Api.handle(response,
+                    () => {
+                      message.success(I18n(['SETTING', 'SUCCESS']));
+                      this.query();
+                    }
+                  );
+                });
+              }}>
+                <Button
+                  type={record.essay_is_excellent === 1 ? "danger" : "primary"}
+                  size="small"
+                  icon={record.essay_is_excellent === 1 ? <DislikeOutlined/> : <LikeOutlined/>}
+                >
+                  {I18n(record.essay_is_excellent === 1 ? ['CANCEL', 'EXCELLENT'] : 'EXCELLENT')}
+                </Button>
+              </Confirm>
+              <br/>
               <Button size="small" onClick={() => {
                 History.push('/essay/edit?id=' + record.essay_id);
               }}>{I18n('EDIT')}</Button>

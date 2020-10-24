@@ -6,7 +6,8 @@ import {
   AppstoreAddOutlined,
   ReloadOutlined,
   DeleteOutlined,
-  IssuesCloseOutlined
+  IssuesCloseOutlined,
+  VerticalAlignTopOutlined,
 } from "@ant-design/icons";
 import {Api, Confirm, History, I18n, Approve} from "h-react-antd";
 import Filter from "./Filter";
@@ -56,6 +57,11 @@ class List extends Component {
         },
       },
       {
+        title: I18n("sort"),
+        dataIndex: this.tableName + 'sort',
+        key: this.tableName + 'sort',
+      },
+      {
         title: I18n('operate'),
         dataIndex: this.tableName + 'id',
         key: this.tableName + 'id',
@@ -63,6 +69,18 @@ class List extends Component {
         render: (text, record, index) => {
           return (
             <div>
+              <Confirm onConfirm={() => {
+                Api.query().post({ESSAY_CATEGORY_TOP: {id: record[this.tableName + 'id']}}, (response) => {
+                  Api.handle(response,
+                    () => {
+                      message.success(I18n(['SETTING', 'SUCCESS']));
+                      this.query();
+                    }
+                  );
+                });
+              }}>
+                <Button type="primary" size="small" icon={<VerticalAlignTopOutlined/>}>{I18n('TOP')}</Button>
+              </Confirm>
               <Button size="small" onClick={() => {
                 History.push('/essay/category/edit?id=' + record[this.tableName + 'id']);
               }}>{I18n('EDIT')}</Button>
