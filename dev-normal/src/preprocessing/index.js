@@ -2,11 +2,9 @@ import {Api, LocalStorage, Preprocessing, Navigator} from "h-react-antd";
 import I18nJson from "./i18n.json";
 import Helper from "./helper.js";
 import router from "./router.js";
-import catalog from "./catalog.js";
 import mapping from "./mapping.js";
 
-// const i18nSupport = ['zh_cn', 'zh_tw', 'zh_hk', 'en_us', 'ja_jp', 'ko_kr'];
-const i18nSupport = ['zh_cn'];
+const i18nSupport = ['zh_cn', 'zh_tw', 'zh_hk', 'en_us', 'ja_jp', 'ko_kr'];
 
 /**
  * 这里是h-react.HistoryInitial需要预处理的数据项
@@ -38,6 +36,5 @@ export default {
       }),
   },
   router: router,
-  catalog: catalog,
   mapping: mapping,
 }

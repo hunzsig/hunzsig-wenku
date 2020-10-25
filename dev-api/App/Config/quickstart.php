@@ -32,3 +32,4 @@ QuickStartInstall::leagueMember();
 QuickStartInstall::feedback();
 AppInstall::stat();
 AppInstall::me();
+AppInstall::essay();

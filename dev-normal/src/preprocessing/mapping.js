@@ -19,11 +19,6 @@ export default {
             "Yonna_QuickStart_Mapping_User_Sex",
             "Yonna_QuickStart_Mapping_User_UserStatus",
             "Yonna_QuickStart_Mapping_Data_DataStatus",
-            "Yonna_QuickStart_Mapping_League_LeagueStatus",
-            "Yonna_QuickStart_Mapping_League_LeagueAdministratorStatus",
-            "Yonna_QuickStart_Mapping_League_LeagueTaskStatus",
-            "Yonna_QuickStart_Mapping_League_LeagueMemberStatus",
-            "Yonna_QuickStart_Mapping_League_LeagueMemberPermission",
           ]
         },
       }, (response) => {

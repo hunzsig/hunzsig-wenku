@@ -67,6 +67,9 @@ class Add extends Component {
         <Form.Item name="sort" label={I18n('sort')}>
           <InputNumber min={0} max={99999} allowClear={true}/>
         </Form.Item>
+        <Form.Item name="icon" label="LOGO">
+          <InputNumber min={0} max={99999} allowClear={true}/>
+        </Form.Item>
         <Form.Item label=" " colon={false} style={{textAlign: 'right'}}>
           <Button type="primary" htmlType="submit" disabled={this.state.processing}>{I18n('SUBMIT')}</Button>
         </Form.Item>

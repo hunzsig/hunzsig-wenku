@@ -4,6 +4,8 @@ namespace App;
 
 use App\Scope\Me;
 use App\Scope\Stat;
+use App\Scope\Essay;
+use App\Scope\EssayCategory;
 use Yonna\QuickStart\Middleware\Limiter;
 use Yonna\QuickStart\Middleware\Logging;
 use Yonna\Scope\Config;
@@ -58,6 +60,25 @@ class Install
                     Config::post('leagueGrow', Stat::class, 'leagueGrow');
                     Config::post('taskGrow', Stat::class, 'taskGrow');
                     Config::post('essayGrow', Stat::class, 'essayGrow');
+                });
+            }
+        );
+    }
+
+    public static function essay(): void
+    {
+        Config::middleware([Limiter::class],
+            function () {
+                Config::group(['normal', 'essay'], function () {
+
+                    Config::post('page', Essay::class, 'page');
+                    Config::post('views', Essay::class, 'views');
+                    Config::post('likes', Essay::class, 'likes');
+
+                    Config::group(['category'], function () {
+                        Config::post('list', EssayCategory::class, 'multi');
+                    });
+
                 });
             }
         );
