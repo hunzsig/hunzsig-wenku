@@ -7,6 +7,7 @@ import {
   MessageOutlined,
   RedoOutlined,
   PlusOutlined,
+  UserOutlined,
 } from '@ant-design/icons';
 import {Api, LocalStorage, Parse, XossShow, I18n, History} from 'h-react-antd';
 
@@ -127,6 +128,55 @@ class Homepage extends Component {
     return [this.state.currentCategoryId.toString(10)];
   }
 
+  fire = (x, y) => {
+    const getColor = () => {
+      let str = '#';
+      for (let i = 0; i < 6; i++) {
+        str += (Math.round(Math.random() * 16)).toString(16);
+      }
+      return str;
+    }
+    const getStyle = (ele, attr) => {
+      if (ele.currentStyle) {
+        return ele.currentStyle[attr];
+      } else {
+        return getComputedStyle(ele, false)[attr];
+      }
+    }
+    const move = function (fireObj, json) {
+      let limit = 12;
+      const times = setInterval(() => {
+        limit--;
+        for (let attr in json) {
+          const nowSize = parseInt(getStyle(fireObj, attr));
+          let speed = (json[attr] - nowSize) / 7;
+          fireObj.style[attr] = speed + nowSize + 'px';
+          if (limit <= 0 || json[attr] == nowSize) {
+            clearInterval(times);
+            fireObj.remove();
+          }
+
+        }
+      }, 30);
+    }
+    for (let i = 0; i < 20; i++) {
+      //烟花粒子
+      const oDivS = document.createElement('div');
+      const oSize = Parse.randInt(6, 14) + 'px';
+      oDivS.style.width = oSize;
+      oDivS.style.height = oSize;
+      oDivS.style.position = 'fixed';
+      oDivS.style.borderRadius = '50%';
+      oDivS.style.backgroundColor = getColor();
+      document.body.append(oDivS);
+      oDivS.style.top = y + 'px';
+      oDivS.style.left = x + 'px';
+      const left = Parse.randInt(0, document.body.offsetWidth - oDivS.offsetWidth);
+      const top = Parse.randInt(0, document.body.offsetHeight - oDivS.offsetHeight);
+      move(oDivS, {left: left, top: top});
+    }
+  }
+
   render() {
     return (
       <div className="page-homepage">
@@ -222,8 +272,22 @@ class Homepage extends Component {
                 }}
               />
             </Tooltip>
+            <Button
+              disabled={this.state.loading}
+              icon={<LikeOutlined/>}
+              onClick={(e) => {
+                this.fire(e.pageX, e.pageY);
+                this.setState({loading: true});
+                Api.query().post({NORMAL_ESSAY_LIKES: {id: this.state.currentEssayId}}, (response) => {
+                  this.setState({loading: false});
+                  Api.handle(response, () => {
+                    this.queryEssay();
+                  });
+                });
+              }}
+            />
             {
-              History.state.loggingId &&
+              History.state.loggingId > 0 &&
               <Tooltip placement="left" title={I18n('me')}>
                 <Button
                   className="avatar"
@@ -238,12 +302,25 @@ class Homepage extends Component {
               </Tooltip>
             }
             {
-              History.state.loggingId &&
+              History.state.loggingId > 0 &&
               <Tooltip placement="left" title={I18n('publish article')}>
                 <Button
                   type="primary"
                   disabled={this.state.loading}
                   icon={<PlusOutlined/>}
+                  onClick={() => {
+                    message.warning('功能未开放');
+                  }}
+                />
+              </Tooltip>
+            }
+            {
+              !History.state.loggingId &&
+              <Tooltip placement="left" title={I18n('join')}>
+                <Button
+                  type="primary"
+                  disabled={this.state.loading}
+                  icon={<UserOutlined/>}
                   onClick={() => {
                     message.warning('功能未开放');
                   }}

@@ -67,19 +67,27 @@ class Essay extends AbstractScope
     }
 
     /**
-     * @return int
+     * @return bool
      * @throws Exception\DatabaseException
+     * @throws Exception\ErrorException
      */
     public function likes()
     {
         ArrayValidator::required($this->input(), ['id'], function ($error) {
             Exception::throw($error);
         });
-        return DB::connect()->table(self::TABLE)
+        $id = $this->input('id');
+        $k = "el:" . $id . ':' . $this->request()->getClientId();
+        if (DB::redis()->get($k) === 1) {
+            Exception::error('Already liked');
+        }
+        DB::connect()->table(self::TABLE)
             ->where(fn(Where $w) => $w->equalTo('id', $this->input('id')))
             ->update([
                 'likes' => ['exp', '`likes`+1']
             ]);
+        DB::redis()->set($k, 1, 600);
+        return true;
     }
 
 }

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    #container {
+      width: 80%;
+      height: 600px;
+      border: 1px red solid;
+      position: relative;
+      margin: 20px auto;
+      cursor: pointer;
+      background: black;
+    }
+
+    .fire {
+      background: red;
+      position: absolute;
+      /* 设置bottom时,top获取为最大值,减去鼠标点击位置 */
+      bottom: 0px;
+      width: 6px;
+      height: 6px;
+
+    }
+
+    .small-fire {
+      width: 10px;
+      height: 10px;
+      position: absolute;
+      border-radius: 50%;
+    }
+  </style>
+</head>
+
+<body>
+<div id="container">
+
+</div>
+<script>
+  var oCont = document.querySelector('#container');
+  oCont.onclick = function (e) {
+    // 创建对象保存点击位置
+    var pos = {};
+    pos.x = e.offsetX;
+    pos.y = e.offsetY;
+    // console.log(pos);
+    new Fire(oCont, pos);
+  };
+  function Fire(oCont, pos) {
+    this.oCont = oCont;
+    this.pos = pos;
+    var oDivB = document.createElement('div');
+    oDivB.className = 'fire';
+    // 计算左侧距离
+    oDivB.style.left = this.pos.x + 'px';
+    oDivB.style.backgroundColor = this.getColor();
+    //节点的追加
+    this.oCont.append(oDivB);
+    //避免this指向全局
+    var that = this;
+    this.move(oDivB, { top: this.pos.y }, function () {
+      // 回调函数清除大的引出小的
+      oDivB.remove();
+      that.smallFire();
+    })
+  }
+  //小烟花
+  Fire.prototype.smallFire = function () {
+    for (var i = 0; i < 12; i++) {
+      var oDivS = document.createElement('div');
+      //添加小礼花类名
+      oDivS.className = 'small-fire';
+      oDivS.style.backgroundColor = this.getColor();
+      this.oCont.append(oDivS);
+      //获取初始位置（鼠标点击位置）
+      oDivS.style.top = this.pos.y + 'px';
+      oDivS.style.left = this.pos.x + 'px';
+      //设置偏移位置一横一竖1q一个终点位置
+      var left = this.rand(0, this.oCont.offsetWidth - oDivS.offsetWidth);
+      var top = this.rand(0, this.oCont.offsetHeight - oDivS.offsetHeight)
+      that = this;
+      (function (ele) {
+        that.move(ele, {
+          left: left,
+          top: top
+        }, function () {
+          ele.remove();
+        });
+
+      })(oDivS)
+    }
+  }
+  // 移动函数（大小烟火的移动）-----------------------------------
+  Fire.prototype.move = function (fireObj, json, callBack) {
+    // // 设置开关r
+    // var flag = true;
+    var times = '';
+    // 避免定时器累计
+    clearInterval(times);
+    that = this;
+    times = setInterval(() => {
+      for (var attr in json) {
+        var nowSize = parseInt(that.getStyle(fireObj, attr));
+        var speed = (json[attr] - nowSize) / 7;
+        speed = speed > 0 ? Math.ceil(speed) : Math.floor(speed);
+        //为什么这里不加position（因为上面设置过了直接添加的属性）
+        fireObj.style[attr] = speed + nowSize + 'px';
+        if (json[attr] == nowSize) {
+          clearInterval(times);
+          callBack();
+        }
+
+      }
+    }, 30);
+  }
+
+
+
+  // __________随机颜色的获取————————————————————————————
+  Fire.prototype.getColor = function () {
+    var str = '#';
+    for (var i = 0; i < 6; i++) {
+      str += (Math.round(Math.random() * 16)).toString(16);
+    }
+    return str;
+  }
+
+  // ================获取内联样式=============================
+  Fire.prototype.getStyle = function (ele, attr) {
+    if (ele.currentStyle) {
+      return ele.currentStyle[attr];
+    } else {
+      return getComputedStyle(ele, false)[attr];
+    }
+  }
+  /******随机数的生成*******/
+  Fire.prototype.rand = function (min, max) {
+    return parseInt(Math.random() * (max - min) + min);
+  }
+  // console.log(getColor());
+</script>
+</body>
+
+</html>
