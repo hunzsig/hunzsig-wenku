@@ -52,11 +52,18 @@ class Essay extends AbstractScope
         ArrayValidator::required($this->input(), ['id'], function ($error) {
             Exception::throw($error);
         });
-        return DB::connect()->table(self::TABLE)
-            ->where(fn(Where $w) => $w->equalTo('id', $this->input('id')))
+        $id = $this->input('id');
+        $k = "ev:" . $id . ':' . $this->request()->getClientId();
+        if (DB::redis()->get($k) === 1) {
+            return true;
+        }
+        DB::connect()->table(self::TABLE)
+            ->where(fn(Where $w) => $w->equalTo('id', $id))
             ->update([
                 'views' => ['exp', '`views`+1']
             ]);
+        DB::redis()->set($k, 1, 3600);
+        return true;
     }
 
     /**

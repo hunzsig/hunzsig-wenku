@@ -1,6 +1,6 @@
 import './Homepage.less';
 import React, {Component} from 'react';
-import {message, Menu, List, Pagination, Space, Button} from 'antd';
+import {message, Menu, List, Pagination, Space, Tooltip, Button} from 'antd';
 import {
   EyeOutlined,
   LikeOutlined,
@@ -8,7 +8,7 @@ import {
   RedoOutlined,
   PlusOutlined,
 } from '@ant-design/icons';
-import {Api, LocalStorage, Parse, XossShow, I18n} from 'h-react-antd';
+import {Api, LocalStorage, Parse, XossShow, I18n, History} from 'h-react-antd';
 
 class Homepage extends Component {
   constructor(props) {
@@ -68,6 +68,8 @@ class Homepage extends Component {
         this.state.currentEssayId,
       ].join("_")
     }));
+    // views
+    Api.query().post({NORMAL_ESSAY_VIEWS: {id: this.state.currentEssayId}}, () => null);
   }
 
   queryCategory = () => {
@@ -159,8 +161,8 @@ class Homepage extends Component {
               <List.Item
                 className={this.state.currentEssayId === item.essay_id ? 'active' : null}
                 actions={[
-                  <Space><EyeOutlined/>{item.essay_likes}</Space>,
-                  <Space><LikeOutlined/>{item.essay_views}</Space>,
+                  <Space><EyeOutlined/>{item.essay_views}</Space>,
+                  <Space><LikeOutlined/>{item.essay_likes}</Space>,
                   <Space><MessageOutlined/> - </Space>,
                 ]}
                 onClick={() => {
@@ -209,7 +211,7 @@ class Homepage extends Component {
         {
           this.state.currentEssay &&
           <div className="operation">
-            <Button.Group>
+            <Tooltip placement="left" title={I18n('refresh')}>
               <Button
                 type="dashed"
                 disabled={this.state.loading}
@@ -219,15 +221,35 @@ class Homepage extends Component {
                   this.queryEssay()
                 }}
               />
-              <Button
-                type="primary"
-                disabled={this.state.loading}
-                icon={<PlusOutlined/>}
-                onClick={() => {
-                  message.warning('功能未开放');
-                }}
-              />
-            </Button.Group>
+            </Tooltip>
+            {
+              History.state.loggingId &&
+              <Tooltip placement="left" title={I18n('me')}>
+                <Button
+                  className="avatar"
+                  type="default"
+                  disabled={this.state.loading}
+                  onClick={() => {
+                    message.warning('功能未开放');
+                  }}
+                >
+                  <img src="https://www.hunzsig.com/assets/bd388583e4e7cec6dc95ad3fb7994167.jpg"/>
+                </Button>
+              </Tooltip>
+            }
+            {
+              History.state.loggingId &&
+              <Tooltip placement="left" title={I18n('publish article')}>
+                <Button
+                  type="primary"
+                  disabled={this.state.loading}
+                  icon={<PlusOutlined/>}
+                  onClick={() => {
+                    message.warning('功能未开放');
+                  }}
+                />
+              </Tooltip>
+            }
           </div>
         }
       </div>
