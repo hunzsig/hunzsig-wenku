@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {message, Form, Input, InputNumber, Button, Select, Spin} from 'antd';
-import {Api, I18n, Parse, History} from 'h-react-antd';
+import {Api, I18n, Parse, History, XossUploadImageCrop} from 'h-react-antd';
 
 class Edit extends Component {
   constructor(props) {
@@ -74,6 +74,9 @@ class Edit extends Component {
           </Form.Item>
           <Form.Item name="sort" label={I18n('sort')}>
             <InputNumber min={0} max={99999} allowClear={true}/>
+          </Form.Item>
+          <Form.Item name="logo" label="LOGO">
+            <XossUploadImageCrop/>
           </Form.Item>
           <Form.Item label=" " colon={false} style={{textAlign: 'right'}}>
             <Button type="primary" htmlType="submit">{I18n('SUBMIT')}</Button>

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {message, Form, Input, InputNumber, Button, Select} from 'antd';
-import {Api, I18n, History} from 'h-react-antd';
+import {Api, I18n, History, XossUploadImageCrop} from 'h-react-antd';
 
 class Add extends Component {
   constructor(props) {
@@ -67,8 +67,8 @@ class Add extends Component {
         <Form.Item name="sort" label={I18n('sort')}>
           <InputNumber min={0} max={99999} allowClear={true}/>
         </Form.Item>
-        <Form.Item name="icon" label="LOGO">
-          <InputNumber min={0} max={99999} allowClear={true}/>
+        <Form.Item name="logo" label="LOGO" rules={[{required: true}]}>
+          <XossUploadImageCrop/>
         </Form.Item>
         <Form.Item label=" " colon={false} style={{textAlign: 'right'}}>
           <Button type="primary" htmlType="submit" disabled={this.state.processing}>{I18n('SUBMIT')}</Button>

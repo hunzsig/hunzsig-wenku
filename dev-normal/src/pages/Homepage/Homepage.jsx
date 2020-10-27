@@ -194,8 +194,8 @@ class Homepage extends Component {
           {
             this.state.category.map((obj) => {
               return (
-                <Menu.Item key={obj.essay_category_id}>
-                  <XossShow src={obj.essay_category_icon}/>
+                <Menu.Item key={obj.essay_category_id} className="cateItem">
+                  <XossShow src={obj.essay_category_logo}/>
                   <span>{obj.essay_category_name}</span>
                 </Menu.Item>
               );
@@ -209,7 +209,7 @@ class Homepage extends Component {
             dataSource={this.state.essay.list}
             renderItem={item => (
               <List.Item
-                className={this.state.currentEssayId === item.essay_id ? 'active' : null}
+                className={parseInt(this.state.currentEssayId) === item.essay_id ? 'active' : null}
                 actions={[
                   <Space><EyeOutlined/>{item.essay_views}</Space>,
                   <Space><LikeOutlined/>{item.essay_likes}</Space>,

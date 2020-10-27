@@ -9,7 +9,7 @@ import {
   IssuesCloseOutlined,
   VerticalAlignTopOutlined,
 } from "@ant-design/icons";
-import {Api, Confirm, History, I18n, Approve} from "h-react-antd";
+import {Api, Confirm, History, I18n, Approve, XossShow} from "h-react-antd";
 import Filter from "./Filter";
 import Field from "./Field";
 
@@ -42,6 +42,12 @@ class List extends Component {
         dataIndex: this.tableName + 'id',
         key: this.tableName + 'id',
         width: 100,
+      },
+      {
+        title: 'logo',
+        dataIndex: this.tableName + 'logo',
+        key: this.tableName + 'logo',
+        render: (text) => <XossShow width={50} height={50} src={text[0]}/>,
       },
       {
         title: I18n("name"),
