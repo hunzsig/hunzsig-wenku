@@ -82,7 +82,7 @@ class Homepage extends Component {
             this.setState({
               category: this.state.category,
             });
-            LocalStorage.set('homepage-category', this.state.category, 3600 * 1e3);
+            LocalStorage.set('homepage-category', this.state.category, 600);
             if (this.state.currentCategoryId <= 0) {
               this.state.currentCategoryId = this.state.category[0].essay_category_id;
               this.setState({currentCategoryId: this.state.currentCategoryId});
