@@ -58,7 +58,7 @@ class Homepage extends Component {
     if (this.state.currentCategoryId > 0) {
       tit += '>' + categoryKV[this.state.currentCategoryId].essay_category_name;
     }
-    if (this.state.currentEssayId > 0) {
+    if (this.state.currentEssayId > 0 && essayKV[this.state.currentEssayId]) {
       tit += '>' + essayKV[this.state.currentEssayId].essay_title;
     }
     document.title = tit;
@@ -186,9 +186,9 @@ class Homepage extends Component {
           mode="inline"
           selectedKeys={this.renderSelectedKeysCate()}
           onClick={(e) => {
-            this.setState({
-              currentCategoryId: e.key,
-            });
+            this.state.currentCategoryId = e.key;
+            this.setState({currentCategoryId: this.state.currentCategoryId});
+            this.queryEssay();
           }}
         >
           {
