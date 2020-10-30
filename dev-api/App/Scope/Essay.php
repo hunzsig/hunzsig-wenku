@@ -37,6 +37,7 @@ class Essay extends AbstractScope
                 $prism->getTitle() && $w->like('title', '%' . $prism->getTitle() . '%');
                 $prism->getIsExcellent() && $w->equalTo('is_excellent', $prism->getIsExcellent());
             })
+            ->orderBy('is_excellent', 'desc')
             ->orderBy('sort', 'desc')
             ->orderBy('likes', 'desc')
             ->orderBy('views', 'desc')

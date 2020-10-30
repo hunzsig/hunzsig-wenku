@@ -1,6 +1,6 @@
 import './Homepage.less';
 import React, {Component} from 'react';
-import {message, Menu, List, Pagination, Space, Tooltip, Button} from 'antd';
+import {message, Row, Col, Menu, List, Pagination, Space, Tooltip, Button} from 'antd';
 import {
   EyeOutlined,
   LikeOutlined,
@@ -8,8 +8,10 @@ import {
   RedoOutlined,
   PlusOutlined,
   UserOutlined,
+  TranslationOutlined,
 } from '@ant-design/icons';
-import {Api, LocalStorage, Parse, XossShow, I18n, History} from 'h-react-antd';
+import {Api, LocalStorage, Parse, XossShow, I18n, History, Moment, Navigator, I18nContainer} from 'h-react-antd';
+import Help from "../../../vendor/h-react-antd/Setting/Help";
 
 class Homepage extends Component {
   constructor(props) {
@@ -250,6 +252,17 @@ class Homepage extends Component {
           </div>
         </div>
         <div className="content">
+          {
+            this.state.currentEssay &&
+            <Row className="attr">
+              <Col span={6}>
+                {I18n('author')}: {this.state.currentEssay.essay_author}
+              </Col>
+              <Col
+                span={12}>{I18n(['publish', 'time'])}: {Moment.format(this.state.currentEssay.essay_publish_time)}
+              </Col>
+            </Row>
+          }
           <div
             className="html"
             dangerouslySetInnerHTML={{
@@ -272,6 +285,15 @@ class Homepage extends Component {
                 }}
               />
             </Tooltip>
+            <I18nContainer placement="right">
+              <Tooltip placement="left" title={I18n('Switch language')}>
+                <Button
+                  type="dashed"
+                  disabled={this.state.loading}
+                  icon={<TranslationOutlined/>}
+                />
+              </Tooltip>
+            </I18nContainer>
             <Button
               disabled={this.state.loading}
               icon={<LikeOutlined/>}
