@@ -115,7 +115,7 @@ class Homepage extends Component {
             this.setState({
               essay: this.state.essay,
             });
-            if (this.state.currentEssayId <= 0) {
+            if (this.state.currentEssayId <= 0 && this.state.essay.list.length > 0) {
               this.state.currentEssayId = this.state.essay.list[0].essay_id;
               this.setState({currentEssayId: this.state.currentEssayId});
             }
@@ -188,6 +188,7 @@ class Homepage extends Component {
           mode="inline"
           selectedKeys={this.renderSelectedKeysCate()}
           onClick={(e) => {
+            this.state.currentEssayId = 0;
             this.state.currentCategoryId = e.key;
             this.setState({currentCategoryId: this.state.currentCategoryId});
             this.queryEssay();

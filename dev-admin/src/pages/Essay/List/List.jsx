@@ -1,3 +1,4 @@
+import './List.less';
 import React, {Component} from 'react';
 import {Button, message, Pagination, Popover, Table} from 'antd';
 import {
@@ -66,9 +67,16 @@ class List extends Component {
         dataIndex: this.tableName + 'category_id',
         key: this.tableName + 'category_id',
         render: (text) => {
-          return this.state.prepare
-            ? Parse.mapLabel(this.state.prepare.categoryMapping, text, 'ESSAY_CATEGORY')
-            : '...';
+          let label = '...';
+          if (this.state.prepare) {
+            label = Parse.mapLabel(this.state.prepare.categoryMapping, text, 'ESSAY_CATEGORY');
+          }
+          return (
+            <span
+              className="essay-cate-name"
+              style={{background: Parse.str2color(label)}}
+            >{label}</span>
+          );
         },
       },
       {
