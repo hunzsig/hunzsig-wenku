@@ -10,7 +10,8 @@ import {
   TranslationOutlined,
   SearchOutlined,
 } from '@ant-design/icons';
-import {Api, LocalStorage, Parse, XossShow, I18n, History, Moment, I18nContainer} from 'h-react-antd';
+import {Api, LocalStorage, Parse, I18n, History, Moment, I18nContainer} from 'h-react-antd';
+import Xoss from "../../../vendor/h-react-antd/Xoss";
 
 class Homepage extends Component {
   constructor(props) {
@@ -194,7 +195,7 @@ class Homepage extends Component {
             this.state.category.map((obj) => {
               return (
                 <Menu.Item key={obj.essay_category_id} className="cateItem">
-                  <XossShow src={obj.essay_category_logo}/>
+                  <img alt={obj.essay_category_name} src={Xoss.url(obj.essay_category_logo)}/>
                   <span>{obj.essay_category_name}</span>
                 </Menu.Item>
               );
