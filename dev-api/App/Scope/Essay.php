@@ -23,7 +23,7 @@ class Essay extends AbstractScope
      * @return mixed
      * @throws Exception\DatabaseException
      */
-    public function page(): array
+    public function multi(): array
     {
         ArrayValidator::required($this->input(), ['category_id'], function ($error) {
             Exception::throw($error);
@@ -39,9 +39,10 @@ class Essay extends AbstractScope
             })
             ->orderBy('is_excellent', 'desc')
             ->orderBy('sort', 'desc')
+            ->orderBy('publish_time', 'desc')
             ->orderBy('likes', 'desc')
             ->orderBy('views', 'desc')
-            ->page($prism->getCurrent(), $prism->getPer());
+            ->multi();
     }
 
     /**

@@ -71,7 +71,7 @@ class Install
             function () {
                 Config::group(['normal', 'essay'], function () {
 
-                    Config::post('page', Essay::class, 'page');
+                    Config::post('list', Essay::class, 'multi');
                     Config::post('views', Essay::class, 'views');
                     Config::post('likes', Essay::class, 'likes');
 

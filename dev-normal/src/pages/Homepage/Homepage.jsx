@@ -1,17 +1,16 @@
 import './Homepage.less';
 import React, {Component} from 'react';
-import {message, Row, Col, Menu, List, Pagination, Space, Tooltip, Button} from 'antd';
+import {message, Row, Col, Menu, List, Tooltip, Button, Input} from 'antd';
 import {
   EyeOutlined,
   LikeOutlined,
-  MessageOutlined,
   RedoOutlined,
   PlusOutlined,
   UserOutlined,
   TranslationOutlined,
+  SearchOutlined,
 } from '@ant-design/icons';
-import {Api, LocalStorage, Parse, XossShow, I18n, History, Moment, Navigator, I18nContainer} from 'h-react-antd';
-import Help from "../../../vendor/h-react-antd/Setting/Help";
+import {Api, LocalStorage, Parse, XossShow, I18n, History, Moment, I18nContainer} from 'h-react-antd';
 
 class Homepage extends Component {
   constructor(props) {
@@ -22,11 +21,8 @@ class Homepage extends Component {
 
     const c = this.search[1] || 0;
     const e = this.search[2] || 0;
-    const per = Math.ceil((document.body.offsetHeight - 44) / 94);
 
     this.filter = {
-      current: this.search[0] || 1,
-      per: per,
       category_id: c,
     };
     this.state = {
@@ -36,6 +32,7 @@ class Homepage extends Component {
       currentEssayId: e,
       currentEssay: null,
       loading: false,
+      searchKey: '',
     }
   }
 
@@ -49,7 +46,7 @@ class Homepage extends Component {
       categoryKV[obj.essay_category_id] = obj;
     });
     const essayKV = {};
-    this.state.essay.list.forEach((obj) => {
+    this.state.essay.forEach((obj) => {
       essayKV[obj.essay_id] = obj;
     });
 
@@ -105,9 +102,8 @@ class Homepage extends Component {
   queryEssay = () => {
     if (this.state.currentCategoryId > 0) {
       this.filter.category_id = this.state.currentCategoryId;
-      const cacheKey = `homepage-essay-${this.state.currentCategoryId}`;
       this.setState({loading: true});
-      Api.query().post({NORMAL_ESSAY_PAGE: this.filter}, (response) => {
+      Api.query().post({NORMAL_ESSAY_LIST: this.filter}, (response) => {
         this.setState({loading: false});
         Api.handle(response,
           () => {
@@ -115,8 +111,8 @@ class Homepage extends Component {
             this.setState({
               essay: this.state.essay,
             });
-            if (this.state.currentEssayId <= 0 && this.state.essay.list.length > 0) {
-              this.state.currentEssayId = this.state.essay.list[0].essay_id;
+            if (this.state.currentEssayId <= 0 && this.state.essay.length > 0) {
+              this.state.currentEssayId = this.state.essay[0].essay_id;
               this.setState({currentEssayId: this.state.currentEssayId});
             }
             this.setter();
@@ -206,51 +202,54 @@ class Homepage extends Component {
           }
         </Menu>
         <div className="essay">
+          <div className="searcher">
+            <Input
+              placeholder={I18n(['PLEASE_INPUT', 'KEYWORD'])}
+              prefix={<SearchOutlined/>}
+              onChange={(evt) => {
+                this.setState({
+                  searchKey: evt.target.value || '',
+                });
+              }}
+            />
+          </div>
           <List
             loading={this.state.loading}
             itemLayout="vertical"
-            dataSource={this.state.essay.list}
-            renderItem={item => (
-              <List.Item
-                className={parseInt(this.state.currentEssayId) === item.essay_id ? 'active' : null}
-                actions={[
-                  <Space><EyeOutlined/>{item.essay_views}</Space>,
-                  <Space><LikeOutlined/>{item.essay_likes}</Space>,
-                  <Space><MessageOutlined/> - </Space>,
-                ]}
-                onClick={() => {
-                  this.state.currentEssayId = item.essay_id;
-                  this.setState({currentEssayId: this.state.currentEssayId});
-                  this.setter();
-                }}
-              >
-                <List.Item.Meta
-                  title={<div>
-                    {item.essay_is_excellent === 1 && <span className="excellent">&lt;{I18n('excellent')}&gt;</span>}
-                    <span>{item.essay_title}</span>
-                  </div>}
-                  description={Parse.limitStr(Parse.cleanHTML(item.essay_content), 30)}
-                />
-              </List.Item>
-            )}
+            dataSource={this.state.essay}
+            renderItem={(item) => {
+              if (this.state.searchKey.length > 0) {
+                const sk = this.state.searchKey.toLowerCase();
+                const lt = item.essay_title.toLowerCase();
+                const lc = item.essay_content.toLowerCase();
+                const le = I18n('excellent').toLowerCase();
+                const p1 = lt.toLowerCase().indexOf(sk) === -1;
+                const p2 = lc.toLowerCase().indexOf(sk) === -1;
+                const p3 = sk.indexOf(le) === -1 || (sk.indexOf(le) !== -1 && parseInt(item.essay_is_excellent, 10) !== 1);
+                if (p1 && p2 && p3) {
+                  return null;
+                }
+              }
+              return (
+                <List.Item
+                  className={parseInt(this.state.currentEssayId) === item.essay_id ? 'active' : null}
+                  onClick={() => {
+                    this.state.currentEssayId = item.essay_id;
+                    this.setState({currentEssayId: this.state.currentEssayId});
+                    this.setter();
+                  }}
+                >
+                  <List.Item.Meta
+                    title={<div>
+                      {item.essay_is_excellent === 1 && <span className="excellent">&lt;{I18n('excellent')}&gt;</span>}
+                      <span>{item.essay_title}</span>
+                    </div>}
+                    description={Parse.limitStr(Parse.cleanHTML(item.essay_content), 30)}
+                  />
+                </List.Item>
+              );
+            }}
           />
-          <div className="space-pagination">
-            {
-              this.state.essay.page &&
-              <Pagination
-                className="pagination"
-                simple={true}
-                disabled={this.state.loading}
-                defaultCurrent={this.state.essay.page.current}
-                defaultPageSize={this.state.essay.page.per}
-                total={this.state.essay.page.total}
-                onChange={(current) => {
-                  this.filter.current = current;
-                  this.queryEssay();
-                }}
-              />
-            }
-          </div>
         </div>
         <div className="content">
           {
@@ -259,8 +258,14 @@ class Homepage extends Component {
               <Col span={6}>
                 {I18n('author')}: {this.state.currentEssay.essay_author}
               </Col>
-              <Col
-                span={12}>{I18n(['publish', 'time'])}: {Moment.format(this.state.currentEssay.essay_publish_time)}
+              <Col span={12}>
+                {I18n(['publish', 'time'])}: {Moment.format(this.state.currentEssay.essay_publish_time)}
+              </Col>
+              <Col span={3}>
+                <EyeOutlined/>&nbsp;{this.state.currentEssay.essay_views}
+              </Col>
+              <Col span={3}>
+                <LikeOutlined/>&nbsp;{this.state.currentEssay.essay_likes}
               </Col>
             </Row>
           }
