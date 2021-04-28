@@ -44,7 +44,7 @@ class List extends Component {
         width: 100,
       },
       {
-        title: 'userID',
+        title: I18n('user') + 'ID',
         dataIndex: this.tableName + 'user_id',
         key: this.tableName + 'user_id',
         width: 100,
