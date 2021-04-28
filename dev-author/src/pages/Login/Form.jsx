@@ -34,7 +34,7 @@ export default () => {
       return;
     }
     setFormData({...formData, loginStatus: 'ing'});
-    values.license_id = [1, 2];
+    values.license_id = [4];
     Api.query().post({USER_LOGIN: values}, (response) => {
       Api.handle(response,
         () => {

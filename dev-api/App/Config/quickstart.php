@@ -5,6 +5,7 @@ use Yonna\Log\Config as LogConf;
 
 use Yonna\QuickStart\Install as QuickStartInstall;
 use App\Scope\Normal as NormalInstall;
+use App\Scope\Author as AuthorInstall;
 
 // i18n
 I18nConf::setDatabase('default');
@@ -33,3 +34,5 @@ QuickStartInstall::feedback();
 NormalInstall::stat();
 NormalInstall::me();
 NormalInstall::essay();
+AuthorInstall::stat();
+AuthorInstall::essay();

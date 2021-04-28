@@ -13,7 +13,7 @@ class Login extends Component {
         <div className="bg"/>
         <div className="login-box">
           <div className="login-form">
-            <h4 className="tit">魂之 · 似光</h4>
+            <h4 className="tit">魂之 · 文库 · 作者站</h4>
             <LoginForm/>
           </div>
         </div>
