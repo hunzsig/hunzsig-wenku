@@ -23,9 +23,7 @@ class Filter extends Component {
   onClear = () => {
     this.form.current.setFieldsValue({
       id: undefined,
-      user_id: undefined,
       name: undefined,
-      level: undefined,
       status: undefined,
     });
   };
@@ -50,13 +48,7 @@ class Filter extends Component {
         <Form.Item name="id" label="ID">
           <Input allowClear={true}/>
         </Form.Item>
-        <Form.Item name="user_id" label={I18n('user') + "ID"}>
-          <Input allowClear={true}/>
-        </Form.Item>
         <Form.Item name="name" label={I18n('name')}>
-          <Input allowClear={true}/>
-        </Form.Item>
-        <Form.Item name="level" label={I18n('level')}>
           <Input allowClear={true}/>
         </Form.Item>
         <Form.Item name="status" label={I18n('status')}>

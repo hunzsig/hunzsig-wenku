@@ -30,11 +30,23 @@ class Author
         Config::middleware([Logging::class, Limiter::class],
             function () {
                 Config::group(['author', 'essay'], function () {
-                    Config::post('list', Essay::class, 'multi');
-                    Config::post('views', Essay::class, 'views');
-                    Config::post('likes', Essay::class, 'likes');
+                    Config::post('info', Essay::class, 'one');
+                    Config::post('page', Essay::class, 'page');
+                    Config::post('add', Essay::class, 'insert');
+                    Config::post('edit', Essay::class, 'update');
+                    Config::post('del', Essay::class, 'delete');
+                    Config::post('mDel', Essay::class, 'multiDelete');
+                    Config::post('excellent', Essay::class, 'excellent');
+                    Config::post('top', Essay::class, 'top');
                     Config::group(['category'], function () {
+                        Config::post('add', EssayCategory::class, 'insert');
+                        Config::post('edit', EssayCategory::class, 'update');
+                        Config::post('del', EssayCategory::class, 'delete');
+                        Config::post('mDel', EssayCategory::class, 'multiDelete');
+                        Config::post('info', EssayCategory::class, 'one');
                         Config::post('list', EssayCategory::class, 'multi');
+                        Config::post('page', EssayCategory::class, 'page');
+                        Config::post('top', EssayCategory::class, 'top');
                     });
                 });
             }

@@ -23,7 +23,7 @@ class Add extends Component {
 
   onFinish = (values) => {
     message.loading(I18n('Processing'));
-    Api.query().post({ESSAY_CATEGORY_ADD: values}, (response) => {
+    Api.query().post({AUTHOR_ESSAY_CATEGORY_ADD: values}, (response) => {
       Api.handle(response,
         () => {
           message.success(I18n(['ADD', 'SUCCESS']));
@@ -57,12 +57,6 @@ class Add extends Component {
       >
         <Form.Item name="name" label={I18n(['category', 'name'])} rules={[{required: true}]}>
           <Input allowClear={true}/>
-        </Form.Item>
-        <Form.Item name="status" label={I18n('status')} rules={[{required: true}]}>
-          <Select
-            placeholder={I18n('PLEASE_CHOOSE')}
-            options={History.state.mapping.yonna.antd.Essay_EssayCategoryStatus}
-          />
         </Form.Item>
         <Form.Item name="sort" label={I18n('sort')}>
           <InputNumber min={0} max={99999} allowClear={true}/>

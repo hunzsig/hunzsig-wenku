@@ -6,10 +6,9 @@ import {
   AppstoreAddOutlined,
   ReloadOutlined,
   DeleteOutlined,
-  IssuesCloseOutlined,
   VerticalAlignTopOutlined,
 } from "@ant-design/icons";
-import {Api, Confirm, History, I18n, Approve, XossShow} from "h-react-antd";
+import {Api, Confirm, History, I18n, XossShow} from "h-react-antd";
 import Filter from "./Filter";
 import Field from "./Field";
 
@@ -41,12 +40,6 @@ class List extends Component {
         title: 'ID',
         dataIndex: this.tableName + 'id',
         key: this.tableName + 'id',
-        width: 100,
-      },
-      {
-        title: I18n('user') + 'ID',
-        dataIndex: this.tableName + 'user_id',
-        key: this.tableName + 'user_id',
         width: 100,
       },
       {
@@ -82,7 +75,7 @@ class List extends Component {
           return (
             <div>
               <Confirm onConfirm={() => {
-                Api.query().post({ESSAY_CATEGORY_TOP: {id: record[this.tableName + 'id']}}, (response) => {
+                Api.query().post({AUTHOR_ESSAY_CATEGORY_TOP: {id: record[this.tableName + 'id']}}, (response) => {
                   Api.handle(response,
                     () => {
                       message.success(I18n(['SETTING', 'SUCCESS']));
@@ -97,7 +90,7 @@ class List extends Component {
                 History.push('/essay/category/edit?id=' + record[this.tableName + 'id']);
               }}>{I18n('EDIT')}</Button>
               <Confirm onConfirm={() => {
-                Api.query().post({ESSAY_CATEGORY_DEL: {id: record[this.tableName + 'id']}}, (response) => {
+                Api.query().post({AUTHOR_ESSAY_CATEGORY_DEL: {id: record[this.tableName + 'id']}}, (response) => {
                   Api.handle(response,
                     () => {
                       message.success(I18n(['DELETE', 'SUCCESS']));
@@ -181,7 +174,7 @@ class List extends Component {
           disabled={this.state.querying || this.state.batchKeys.length <= 0}
           onConfirm={() => {
             this.setState({querying: true});
-            Api.query().post({ESSAY_CATEGORY_MDEL: {ids: this.state.batchKeys}}, (response) => {
+            Api.query().post({AUTHOR_ESSAY_CATEGORY_MDEL: {ids: this.state.batchKeys}}, (response) => {
               this.setState({querying: false});
               Api.handle(response,
                 () => {
@@ -198,35 +191,6 @@ class List extends Component {
             disabled={this.state.querying || this.state.batchKeys.length <= 0}
           >{I18n(['BATCH', 'DELETE'])}</Button>
         </Confirm>
-        <Popover
-          trigger="click"
-          placement="bottomLeft"
-          title={I18n(['choose', 'status'])}
-          content={
-            <Approve
-              mapping={History.state.mapping.yonna.antd.Essay_EssayCategoryStatus}
-              onApprove={(status) => {
-                this.setState({querying: true});
-                Api.query().post({ESSAY_CATEGORY_MSTATUS: {ids: this.state.batchKeys, status: status}}, (response) => {
-                  this.setState({querying: false});
-                  Api.handle(response,
-                    () => {
-                      message.success(I18n(['BATCH', 'APPROVE', 'SUCCESS']));
-                      this.query();
-                    }
-                  );
-                });
-              }}
-            />
-          }
-        >
-          <Button
-            size="small"
-            danger
-            icon={<IssuesCloseOutlined/>}
-            disabled={this.state.querying || this.state.batchKeys.length <= 0}
-          >{I18n(['BATCH', 'APPROVE'])}</Button>
-        </Popover>
       </div>
     );
   }
@@ -235,7 +199,7 @@ class List extends Component {
     this.setState({
       querying: true,
     });
-    Api.query().post({ESSAY_CATEGORY_PAGE: this.filter}, (response) => {
+    Api.query().post({AUTHOR_ESSAY_CATEGORY_PAGE: this.filter}, (response) => {
       this.setState({
         querying: false,
       });

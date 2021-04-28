@@ -12,7 +12,7 @@ import {
   LikeOutlined,
   DislikeOutlined,
 } from '@ant-design/icons';
-import {Api, Confirm, History, I18n, Parse, Approve} from "h-react-antd";
+import {Api, Confirm, History, I18n, Parse} from "h-react-antd";
 import Filter from "./Filter";
 import Field from "./Field";
 
@@ -36,7 +36,7 @@ class List extends Component {
   }
 
   componentDidMount() {
-    Api.query().post({ESSAY_CATEGORY_LIST: {status: 2}}, (res) => {
+    Api.query().post({AUTHOR_ESSAY_CATEGORY_LIST: {status: 2}}, (res) => {
       Api.handle(res,
         () => {
           const categoryMapping = [];
@@ -69,7 +69,7 @@ class List extends Component {
         render: (text) => {
           let label = '...';
           if (this.state.prepare) {
-            label = Parse.mapLabel(this.state.prepare.categoryMapping, text, 'ESSAY_CATEGORY');
+            label = Parse.mapLabel(this.state.prepare.categoryMapping, text, 'AUTHOR_ESSAY_CATEGORY');
           }
           return (
             <span
@@ -124,7 +124,7 @@ class List extends Component {
           return (
             <div>
               <Confirm onConfirm={() => {
-                Api.query().post({ESSAY_TOP: {id: record.essay_id}}, (response) => {
+                Api.query().post({AUTHOR_ESSAY_TOP: {id: record.essay_id}}, (response) => {
                   Api.handle(response,
                     () => {
                       message.success(I18n(['SETTING', 'SUCCESS']));
@@ -137,7 +137,7 @@ class List extends Component {
               </Confirm>
               <Confirm onConfirm={() => {
                 Api.query().post({
-                  ESSAY_EXCELLENT: {
+                  AUTHOR_ESSAY_EXCELLENT: {
                     id: record.essay_id,
                     is_excellent: -1 * record.essay_is_excellent
                   }
@@ -163,7 +163,7 @@ class List extends Component {
                 History.push('/essay/edit?id=' + record.essay_id);
               }}>{I18n('EDIT')}</Button>
               <Confirm onConfirm={() => {
-                Api.query().post({ESSAY_DEL: {id: record.essay_id}}, (response) => {
+                Api.query().post({AUTHOR_ESSAY_DEL: {id: record.essay_id}}, (response) => {
                   Api.handle(response,
                     () => {
                       message.success(I18n(['DELETE', 'SUCCESS']));
@@ -253,7 +253,7 @@ class List extends Component {
           disabled={this.state.querying || this.state.batchKeys.length <= 0}
           onConfirm={() => {
             this.setState({querying: true});
-            Api.query().post({ESSAY_MDEL: {ids: this.state.batchKeys}}, (response) => {
+            Api.query().post({AUTHOR_ESSAY_MDEL: {ids: this.state.batchKeys}}, (response) => {
               this.setState({querying: false});
               Api.handle(response,
                 () => {
@@ -270,35 +270,6 @@ class List extends Component {
             disabled={this.state.querying || this.state.batchKeys.length <= 0}
           >{I18n(['BATCH', 'DELETE'])}</Button>
         </Confirm>
-        <Popover
-          trigger="click"
-          placement="bottomLeft"
-          title={I18n(['choose', 'status'])}
-          content={
-            <Approve
-              mapping={History.state.mapping.yonna.antd.Essay_EssayStatus}
-              onApprove={(status) => {
-                this.setState({querying: true});
-                Api.query().post({ESSAY_MSTATUS: {ids: this.state.batchKeys, status: status}}, (response) => {
-                  this.setState({querying: false});
-                  Api.handle(response,
-                    () => {
-                      message.success(I18n(['BATCH', 'APPROVE', 'SUCCESS']));
-                      this.query();
-                    }
-                  );
-                });
-              }}
-            />
-          }
-        >
-          <Button
-            size="small"
-            danger
-            icon={<IssuesCloseOutlined/>}
-            disabled={this.state.querying || this.state.batchKeys.length <= 0}
-          >{I18n(['BATCH', 'APPROVE'])}</Button>
-        </Popover>
       </div>
     );
   }
@@ -307,7 +278,7 @@ class List extends Component {
     this.setState({
       querying: true,
     });
-    Api.query().post({ESSAY_PAGE: this.filter}, (res) => {
+    Api.query().post({AUTHOR_ESSAY_PAGE: this.filter}, (res) => {
       this.setState({
         querying: false,
       });

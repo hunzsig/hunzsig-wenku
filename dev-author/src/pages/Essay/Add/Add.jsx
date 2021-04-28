@@ -9,12 +9,8 @@ class Add extends Component {
 
     this.form = React.createRef();
     this.initialValues = {
-      author: '佚名',
       publish_time: Moment.create(),
-      likes: 0,
-      views: 0,
       sort: 0,
-      status: 1,
       is_excellent: -1,
     };
     this.state = {
@@ -24,7 +20,7 @@ class Add extends Component {
   }
 
   componentDidMount() {
-    Api.query().post({ESSAY_CATEGORY_LIST: {status: 2}}, (response) => {
+    Api.query().post({AUTHOR_ESSAY_CATEGORY_LIST: {status: 2}}, (response) => {
       Api.handle(response,
         () => {
           this.setState({
@@ -39,7 +35,7 @@ class Add extends Component {
   onFinish = (values) => {
     values.publish_time = values.publish_time ? Moment.unix(values.publish_time) : null;
     message.loading(I18n('Processing'));
-    Api.query().post({ESSAY_ADD: values}, (response) => {
+    Api.query().post({AUTHOR_ESSAY_ADD: values}, (response) => {
       Api.handle(response,
         () => {
           message.success(I18n(['ADD', 'SUCCESS']));
@@ -91,12 +87,6 @@ class Add extends Component {
             }
           </Select>
         </Form.Item>
-        <Form.Item name="status" label={I18n('status')} rules={[{required: true}]}>
-          <Select
-            placeholder={I18n('PLEASE_CHOOSE')}
-            options={History.state.mapping.yonna.antd.Essay_EssayStatus}
-          />
-        </Form.Item>
         <Form.Item name="is_excellent" label={I18n('excellent')}>
           <Select
             placeholder={I18n('PLEASE_CHOOSE')}
@@ -106,17 +96,8 @@ class Add extends Component {
         <Form.Item name="title" label={I18n('title')} rules={[{required: true}]}>
           <Input allowClear={true}/>
         </Form.Item>
-        <Form.Item name="author" label={I18n('author')}>
-          <Input allowClear={true}/>
-        </Form.Item>
         <Form.Item name="publish_time" label={I18n(['publish', 'date'])}>
           <DatePicker/>
-        </Form.Item>
-        <Form.Item name="likes" label={I18n('likes')}>
-          <InputNumber min={0} allowClear={true}/>
-        </Form.Item>
-        <Form.Item name="views" label={I18n('views')}>
-          <InputNumber min={0} allowClear={true}/>
         </Form.Item>
         <Form.Item name="sort" label={I18n('sort')}>
           <InputNumber min={0} max={99999} allowClear={true}/>
