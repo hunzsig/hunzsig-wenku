@@ -11,7 +11,7 @@ import {
   SearchOutlined,
 } from '@ant-design/icons';
 import {Api, LocalStorage, Parse, I18n, History, Moment, I18nContainer} from 'h-react-antd';
-import Xoss from "../../../vendor/h-react-antd/Xoss";
+import Xoss from "h-react-antd/Xoss";
 
 class Homepage extends Component {
   constructor(props) {
@@ -272,10 +272,7 @@ class Homepage extends Component {
           }
           <div
             className="html"
-            dangerouslySetInnerHTML={{
-              __html: this.state.currentEssay ?
-                this.state.currentEssay.essay_content : ''
-            }}
+            dangerouslySetInnerHTML={{__html: this.state.currentEssay ? this.state.currentEssay.essay_content : ''}}
           />
         </div>
         {

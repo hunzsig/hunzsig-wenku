@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Scope;
+namespace App\Scope\Normal;
 
 use Yonna\Database\DB;
 use Yonna\Database\Driver\Pdo\Where;

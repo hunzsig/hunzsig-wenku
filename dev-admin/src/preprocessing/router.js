@@ -23,6 +23,9 @@ import UserAdminEdit from '../pages/User/Admin/Edit';
 import UserNormalList from '../pages/User/Normal/List';
 import UserNormalAdd from '../pages/User/Normal/Add';
 import UserNormalEdit from '../pages/User/Normal/Edit';
+import UserAuthorList from '../pages/User/Author/List';
+import UserAuthorAdd from '../pages/User/Author/Add';
+import UserAuthorEdit from '../pages/User/Author/Edit';
 import UserMetaList from "../pages/UserMeta/List";
 import UserMetaAdd from "../pages/UserMeta/Add";
 import UserMetaEdit from "../pages/UserMeta/Edit";
@@ -51,6 +54,9 @@ export default {
   "/user/normal": {component: UserNormalList, label: ['normal', 'user', 'list']},
   "/user/normal/add": {component: UserNormalAdd, label: ['add', 'normal', 'user']},
   "/user/normal/edit": {component: UserNormalEdit, label: ['edit', 'normal', 'user']},
+  "/user/author": {component: UserAuthorList, label: ['author', 'user', 'list']},
+  "/user/author/add": {component: UserAuthorAdd, label: ['add', 'author', 'user']},
+  "/user/author/edit": {component: UserAuthorEdit, label: ['edit', 'author', 'user']},
 
   "/permission": {component: License, label: ['license']},
   "/permission/add": {component: LicenseAdd, label: ['add', 'license']},

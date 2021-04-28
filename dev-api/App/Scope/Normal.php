@@ -1,16 +1,16 @@
 <?php
 
-namespace App;
+namespace App\Scope;
 
-use App\Scope\Me;
-use App\Scope\Stat;
-use App\Scope\Essay;
-use App\Scope\EssayCategory;
+use App\Scope\Normal\Me;
+use App\Scope\Normal\Stat;
+use App\Scope\Normal\Essay;
+use App\Scope\Normal\EssayCategory;
 use Yonna\QuickStart\Middleware\Limiter;
 use Yonna\QuickStart\Middleware\Logging;
 use Yonna\Scope\Config;
 
-class Install
+class Normal
 {
 
     public static function me(): void

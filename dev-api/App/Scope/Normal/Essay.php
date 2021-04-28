@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Scope;
+namespace App\Scope\Normal;
 
 use Yonna\QuickStart\Mapping\Essay\EssayStatus;
 use Yonna\QuickStart\Prism\EssayPrism;

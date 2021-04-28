@@ -29,6 +29,12 @@ export default [
         ]]
       },
       {
+        icon: <UserOutlined/>, to: [['author', 'user'], [
+          {icon: <UnorderedListOutlined/>, to: '/user/author'},
+          {icon: <UserAddOutlined/>, to: '/user/author/add'},
+        ]]
+      },
+      {
         icon: <UserOutlined/>, to: [['normal', 'user'], [
           {icon: <UnorderedListOutlined/>, to: '/user/normal'},
           {icon: <UserAddOutlined/>, to: '/user/normal/add'},

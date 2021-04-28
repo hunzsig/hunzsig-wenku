@@ -4,7 +4,7 @@ use Yonna\I18n\Config as I18nConf;
 use Yonna\Log\Config as LogConf;
 
 use Yonna\QuickStart\Install as QuickStartInstall;
-use App\Install as AppInstall;
+use App\Scope\Normal as NormalInstall;
 
 // i18n
 I18nConf::setDatabase('default');
@@ -30,6 +30,6 @@ QuickStartInstall::license();
 QuickStartInstall::league();
 QuickStartInstall::leagueMember();
 QuickStartInstall::feedback();
-AppInstall::stat();
-AppInstall::me();
-AppInstall::essay();
+NormalInstall::stat();
+NormalInstall::me();
+NormalInstall::essay();
