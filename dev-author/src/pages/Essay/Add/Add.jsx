@@ -20,7 +20,7 @@ class Add extends Component {
   }
 
   componentDidMount() {
-    Api.query().post({AUTHOR_ESSAY_CATEGORY_LIST: {status: 2}}, (response) => {
+    Api.query().post({AUTHOR_ESSAY_CATEGORY_LIST: {}}, (response) => {
       Api.handle(response,
         () => {
           this.setState({
