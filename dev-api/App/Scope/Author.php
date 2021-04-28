@@ -46,7 +46,6 @@ class Author
                         Config::post('info', EssayCategory::class, 'one');
                         Config::post('list', EssayCategory::class, 'multi');
                         Config::post('page', EssayCategory::class, 'page');
-                        Config::post('top', EssayCategory::class, 'top');
                     });
                 });
             }

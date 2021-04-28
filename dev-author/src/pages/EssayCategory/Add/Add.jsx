@@ -11,7 +11,6 @@ class Add extends Component {
       name: '',
       upper_id: 0,
       status: 1,
-      sort: 0,
     };
     this.state = {
       processing: false,
@@ -57,9 +56,6 @@ class Add extends Component {
       >
         <Form.Item name="name" label={I18n(['category', 'name'])} rules={[{required: true}]}>
           <Input allowClear={true}/>
-        </Form.Item>
-        <Form.Item name="sort" label={I18n('sort')}>
-          <InputNumber min={0} max={99999} allowClear={true}/>
         </Form.Item>
         <Form.Item name="logo" label="LOGO" rules={[{required: true}]}>
           <XossUploadImageCrop/>
