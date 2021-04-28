@@ -148,7 +148,7 @@ class Homepage extends Component {
         limit--;
         for (let attr in json) {
           const nowSize = parseInt(getStyle(fireObj, attr));
-          let speed = (json[attr] - nowSize) / 7;
+          let speed = (json[attr] - nowSize) / 5;
           fireObj.style[attr] = speed + nowSize + 'px';
           if (limit <= 0 || json[attr] == nowSize) {
             clearInterval(times);
@@ -158,7 +158,7 @@ class Homepage extends Component {
         }
       }, 30);
     }
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 30; i++) {
       //烟花粒子
       const oDivS = document.createElement('div');
       const oSize = Parse.randInt(6, 14) + 'px';
@@ -170,8 +170,8 @@ class Homepage extends Component {
       document.body.append(oDivS);
       oDivS.style.top = y + 'px';
       oDivS.style.left = x + 'px';
-      const left = Parse.randInt(0, document.body.offsetWidth - oDivS.offsetWidth);
-      const top = Parse.randInt(0, document.body.offsetHeight - oDivS.offsetHeight);
+      const left = Parse.randInt(oDivS.offsetLeft - 300, oDivS.offsetLeft + 50);
+      const top = Parse.randInt(oDivS.offsetTop - 200, oDivS.offsetTop + 200);
       move(oDivS, {left: left, top: top});
     }
   }
@@ -305,54 +305,17 @@ class Homepage extends Component {
                 this.fire(e.pageX, e.pageY);
                 this.setState({loading: true});
                 Api.query().post({NORMAL_ESSAY_LIKES: {id: this.state.currentEssayId}}, (response) => {
-                  this.setState({loading: false});
                   Api.handle(response, () => {
                     this.queryEssay();
                   });
+                  const self = this;
+                  const t = window.setTimeout(function () {
+                    window.clearTimeout(t);
+                    self.setState({loading: false});
+                  }, 2000)
                 });
               }}
             />
-            {
-              History.state.loggingId > 0 &&
-              <Tooltip placement="left" title={I18n('me')}>
-                <Button
-                  className="avatar"
-                  type="default"
-                  disabled={this.state.loading}
-                  onClick={() => {
-                    message.warning('功能未开放');
-                  }}
-                >
-                  <img src="https://www.hunzsig.com/assets/bd388583e4e7cec6dc95ad3fb7994167.jpg"/>
-                </Button>
-              </Tooltip>
-            }
-            {
-              History.state.loggingId > 0 &&
-              <Tooltip placement="left" title={I18n('publish article')}>
-                <Button
-                  type="primary"
-                  disabled={this.state.loading}
-                  icon={<PlusOutlined/>}
-                  onClick={() => {
-                    message.warning('功能未开放');
-                  }}
-                />
-              </Tooltip>
-            }
-            {
-              !History.state.loggingId &&
-              <Tooltip placement="left" title={I18n('join')}>
-                <Button
-                  type="primary"
-                  disabled={this.state.loading}
-                  icon={<UserOutlined/>}
-                  onClick={() => {
-                    message.warning('功能未开放');
-                  }}
-                />
-              </Tooltip>
-            }
           </div>
         }
       </div>
