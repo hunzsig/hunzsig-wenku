@@ -1,4 +1,4 @@
-import {Api, LocalStorage, Preprocessing, Navigator} from "h-react-antd";
+import {Api, LocalStorage, Preprocessing, Navigator, History} from "h-react-antd";
 import I18nJson from "./i18n.json";
 import Helper from "./helper.js";
 import router from "./router.js";
@@ -37,6 +37,21 @@ export default {
         })
       }),
   },
+  avatar: new Preprocessing(() => {
+    return new Promise((resolve, reject) => {
+      if (History.state.loggingId !== null) {
+        Api.query().post({USER_INFO: {id: History.state.loggingId}}, (response) => {
+          Api.handle(response,
+            () => resolve(response.data.user_meta_avatar[0]),
+            () => reject(response.msg),
+            () => reject(response.msg)
+          );
+        });
+      } else {
+        resolve()
+      }
+    })
+  }),
   router: router,
   catalog: catalog,
   mapping: mapping,
