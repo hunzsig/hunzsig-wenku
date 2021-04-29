@@ -6,7 +6,7 @@ import catalog from "./catalog.js";
 import mapping from "./mapping.js";
 
 // const i18nSupport = ['zh_cn', 'zh_tw', 'zh_hk', 'en_us', 'ja_jp', 'ko_kr'];
-const i18nSupport = ['zh_cn'];
+const i18nSupport = ['zh_cn', 'zh_tw', 'zh_hk', 'en_us', 'ja_jp', 'ko_kr'];
 
 /**
  * 这里是h-react.HistoryInitial需要预处理的数据项
