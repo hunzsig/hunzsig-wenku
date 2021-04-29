@@ -36,7 +36,7 @@ class List extends Component {
   }
 
   componentDidMount() {
-    Api.query().post({ESSAY_CATEGORY_LIST: {status: 2}}, (res) => {
+    Api.query().post({ESSAY_CATEGORY_LIST: {status: 10}}, (res) => {
       Api.handle(res,
         () => {
           const categoryMapping = [];
