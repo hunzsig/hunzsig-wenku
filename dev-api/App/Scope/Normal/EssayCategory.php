@@ -27,7 +27,7 @@ class EssayCategory extends AbstractScope
         $prism = new EssayCategoryPrism($this->request());
         return DB::connect()->table(self::TABLE)
             ->where(function (Where $w) use ($prism) {
-                $w->equalTo('status', EssayCategoryStatus::APPROVED);
+                $w->equalTo('status', EssayCategoryStatus::ENABLE);
                 $prism->getName() && $w->like('name', '%' . $prism->getName() . '%');
             })
             ->orderBy('sort', 'desc')

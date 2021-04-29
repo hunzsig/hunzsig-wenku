@@ -94,7 +94,7 @@ class Essay extends AbstractScope
             'user_id' => $this->request()->getLoggingId(),
             'title' => $this->input('title'),
             'category_id' => $this->input('category_id') ?? 0,
-            'status' => $this->input('status') ?? EssayStatus::DISABLED,
+            'status' => $this->input('status') ?? EssayStatus::PENDING,
             'is_excellent' => $this->input('is_excellent') ?? Boolean::false,
             'content' => $content,
             'author' => $me['user_account'][0]['user_account_string'],
@@ -118,7 +118,7 @@ class Essay extends AbstractScope
         $data = [
             'title' => $this->input('title'),
             'category_id' => $this->input('category_id'),
-            'status' => EssayStatus::DISABLED,
+            'status' => EssayStatus::PENDING,
             'is_excellent' => $this->input('is_excellent'),
             'content' => $content,
             'publish_time' => $this->input('publish_time'),
@@ -193,6 +193,40 @@ class Essay extends AbstractScope
             ->where(fn(Where $w) => $w->equalTo('id', $this->input('id')))
             ->update([
                 'sort' => time()
+            ]);
+    }
+
+    /**
+     * @return int
+     * @throws Exception\DatabaseException|Exception\ThrowException
+     */
+    public function hide()
+    {
+        ArrayValidator::required($this->input(), ['id'], function ($error) {
+            Exception::throw($error);
+        });
+        $this->check();
+        return DB::connect()->table(self::TABLE)
+            ->where(fn(Where $w) => $w->equalTo('id', $this->input('id')))
+            ->update([
+                'status' => EssayStatus::APPROVED
+            ]);
+    }
+
+    /**
+     * @return int
+     * @throws Exception\DatabaseException|Exception\ThrowException
+     */
+    public function show()
+    {
+        ArrayValidator::required($this->input(), ['id'], function ($error) {
+            Exception::throw($error);
+        });
+        $this->check();
+        return DB::connect()->table(self::TABLE)
+            ->where(fn(Where $w) => $w->equalTo('id', $this->input('id')))
+            ->update([
+                'status' => EssayStatus::ENABLE
             ]);
     }
 

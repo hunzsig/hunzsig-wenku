@@ -31,7 +31,7 @@ class Essay extends AbstractScope
         $prism = new EssayPrism($this->request());
         return DB::connect()->table(self::TABLE)
             ->where(function (Where $w) use ($prism) {
-                $w->equalTo('status', EssayStatus::ENABLED);
+                $w->equalTo('status', EssayStatus::ENABLE);
                 $w->equalTo('category_id', $prism->getCategoryId());
                 $prism->getId() && $w->equalTo('id', $prism->getId());
                 $prism->getTitle() && $w->like('title', '%' . $prism->getTitle() . '%');

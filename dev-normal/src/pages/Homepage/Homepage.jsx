@@ -5,12 +5,10 @@ import {
   EyeOutlined,
   LikeOutlined,
   RedoOutlined,
-  PlusOutlined,
-  UserOutlined,
   TranslationOutlined,
   SearchOutlined,
 } from '@ant-design/icons';
-import {Api, LocalStorage, Parse, I18n, History, Moment, I18nContainer} from 'h-react-antd';
+import {Api, LocalStorage, Parse, I18n, Moment, I18nContainer} from 'h-react-antd';
 import Xoss from "h-react-antd/Xoss";
 
 class Homepage extends Component {
@@ -55,7 +53,7 @@ class Homepage extends Component {
     this.setState({currentEssay: this.state.currentEssay});
     //
     let tit = '魂之·文库';
-    if (this.state.currentCategoryId > 0) {
+    if (this.state.currentCategoryId > 0 && categoryKV[this.state.currentCategoryId]) {
       tit += '>' + categoryKV[this.state.currentCategoryId].essay_category_name;
     }
     if (this.state.currentEssayId > 0 && essayKV[this.state.currentEssayId]) {
@@ -83,7 +81,7 @@ class Homepage extends Component {
               category: this.state.category,
             });
             LocalStorage.set('homepage-category', this.state.category, 600);
-            if (this.state.currentCategoryId <= 0) {
+            if (this.state.currentCategoryId <= 0 && this.state.category[0]) {
               this.state.currentCategoryId = this.state.category[0].essay_category_id;
               this.setState({currentCategoryId: this.state.currentCategoryId});
             }

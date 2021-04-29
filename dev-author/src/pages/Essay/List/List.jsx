@@ -7,10 +7,11 @@ import {
   InsertRowAboveOutlined,
   PlusOutlined,
   DeleteOutlined,
-  IssuesCloseOutlined,
   VerticalAlignTopOutlined,
   LikeOutlined,
   DislikeOutlined,
+  CloudUploadOutlined,
+  CloudDownloadOutlined,
 } from '@ant-design/icons';
 import {Api, Confirm, History, I18n, Parse} from "h-react-antd";
 import Filter from "./Filter";
@@ -119,10 +120,40 @@ class List extends Component {
         title: I18n('operate'),
         dataIndex: this.tableName + 'id',
         key: this.tableName + 'id',
-        width: 200,
+        width: 300,
         render: (text, record, index) => {
           return (
             <div>
+              {
+                record.essay_status === 2 &&
+                <Confirm onConfirm={() => {
+                  Api.query().post({AUTHOR_ESSAY_SHOW: {id: record.essay_id}}, (response) => {
+                    Api.handle(response,
+                      () => {
+                        message.success(I18n('SUCCESS'));
+                        this.query();
+                      }
+                    );
+                  });
+                }}>
+                  <Button type="primary" size="small" icon={<CloudUploadOutlined/>}>{I18n('SHOW')}</Button>
+                </Confirm>
+              }
+              {
+                record.essay_status === 10 &&
+                <Confirm onConfirm={() => {
+                  Api.query().post({AUTHOR_ESSAY_HIDE: {id: record.essay_id}}, (response) => {
+                    Api.handle(response,
+                      () => {
+                        message.success(I18n('SUCCESS'));
+                        this.query();
+                      }
+                    );
+                  });
+                }}>
+                  <Button type="primary" size="small" icon={<CloudDownloadOutlined/>}>{I18n('HIDE')}</Button>
+                </Confirm>
+              }
               <Confirm onConfirm={() => {
                 Api.query().post({AUTHOR_ESSAY_TOP: {id: record.essay_id}}, (response) => {
                   Api.handle(response,

@@ -170,4 +170,38 @@ class EssayCategory extends AbstractScope
             ->delete();
     }
 
+    /**
+     * @return int
+     * @throws Exception\DatabaseException|Exception\ThrowException
+     */
+    public function hide()
+    {
+        ArrayValidator::required($this->input(), ['id'], function ($error) {
+            Exception::throw($error);
+        });
+        $this->check();
+        return DB::connect()->table(self::TABLE)
+            ->where(fn(Where $w) => $w->equalTo('id', $this->input('id')))
+            ->update([
+                'status' => EssayCategoryStatus::APPROVED
+            ]);
+    }
+
+    /**
+     * @return int
+     * @throws Exception\DatabaseException|Exception\ThrowException
+     */
+    public function show()
+    {
+        ArrayValidator::required($this->input(), ['id'], function ($error) {
+            Exception::throw($error);
+        });
+        $this->check();
+        return DB::connect()->table(self::TABLE)
+            ->where(fn(Where $w) => $w->equalTo('id', $this->input('id')))
+            ->update([
+                'status' => EssayCategoryStatus::ENABLE
+            ]);
+    }
+
 }

@@ -38,6 +38,8 @@ class Author
                     Config::post('mDel', Essay::class, 'multiDelete');
                     Config::post('excellent', Essay::class, 'excellent');
                     Config::post('top', Essay::class, 'top');
+                    Config::post('hide', Essay::class, 'hide');
+                    Config::post('show', Essay::class, 'show');
                     Config::group(['category'], function () {
                         Config::post('add', EssayCategory::class, 'insert');
                         Config::post('edit', EssayCategory::class, 'update');
@@ -46,6 +48,8 @@ class Author
                         Config::post('info', EssayCategory::class, 'one');
                         Config::post('list', EssayCategory::class, 'multi');
                         Config::post('page', EssayCategory::class, 'page');
+                        Config::post('hide', EssayCategory::class, 'hide');
+                        Config::post('show', EssayCategory::class, 'show');
                     });
                 });
             }

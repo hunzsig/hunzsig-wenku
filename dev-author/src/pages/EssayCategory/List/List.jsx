@@ -6,7 +6,8 @@ import {
   AppstoreAddOutlined,
   ReloadOutlined,
   DeleteOutlined,
-  VerticalAlignTopOutlined,
+  CloudUploadOutlined,
+  CloudDownloadOutlined,
 } from "@ant-design/icons";
 import {Api, Confirm, History, I18n, XossShow} from "h-react-antd";
 import Filter from "./Filter";
@@ -65,10 +66,40 @@ class List extends Component {
         title: I18n('operate'),
         dataIndex: this.tableName + 'id',
         key: this.tableName + 'id',
-        width: 200,
+        width: 300,
         render: (text, record, index) => {
           return (
             <div>
+              {
+                record.essay_category_status === 2 &&
+                <Confirm onConfirm={() => {
+                  Api.query().post({AUTHOR_ESSAY_CATEGORY_SHOW: {id: record[this.tableName + 'id']}}, (response) => {
+                    Api.handle(response,
+                      () => {
+                        message.success(I18n('SUCCESS'));
+                        this.query();
+                      }
+                    );
+                  });
+                }}>
+                  <Button type="primary" size="small" icon={<CloudUploadOutlined/>}>{I18n('SHOW')}</Button>
+                </Confirm>
+              }
+              {
+                record.essay_category_status === 10 &&
+                <Confirm onConfirm={() => {
+                  Api.query().post({AUTHOR_ESSAY_CATEGORY_HIDE: {id: record[this.tableName + 'id']}}, (response) => {
+                    Api.handle(response,
+                      () => {
+                        message.success(I18n('SUCCESS'));
+                        this.query();
+                      }
+                    );
+                  });
+                }}>
+                  <Button type="primary" size="small" icon={<CloudDownloadOutlined/>}>{I18n('HIDE')}</Button>
+                </Confirm>
+              }
               <Button size="small" onClick={() => {
                 History.push('/essay/category/edit?id=' + record[this.tableName + 'id']);
               }}>{I18n('EDIT')}</Button>
