@@ -18,7 +18,7 @@ class Edit extends Component {
   componentDidMount() {
     if (this.state.id) {
       Api.query().post({
-        ESSAY_CATEGORY_LIST: {status: 2},
+        ESSAY_CATEGORY_LIST: {},
         ESSAY_INFO: {id: this.state.id}
       }, (response) => {
         Api.handle(response,
